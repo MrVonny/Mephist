@@ -10,8 +10,9 @@ namespace Mephist.Models
     {
         [Display(Name = "ФИО")]
         [Required]
-        //[RegularExpression(@"[А-Я][а-я]+\s[А-Я][а-я]+\s[А-Я][а-я]")]
-        [RegularExpression(@"^[A-Z]+")]
+        [RegularExpression(@"[А-Я][а-я]+\s[А-Я][а-я]+\s[А-Я][а-я]")]
+        //[RegularExpression(@"^[A-Z]+")]
         public string FullName { get; set; }
+
     }
 }

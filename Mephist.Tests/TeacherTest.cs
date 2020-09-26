@@ -14,9 +14,9 @@ namespace Mephist.Tests
         public void InitTest()
         {
             //Arrange
-            List<Teacher> teachers = new List<Teacher>
+            List<Teacher> correct = new List<Teacher>
             {
-                new Teacher() {FullName="Иванов Иван Иваныч" },
+               
                 new Teacher() {FullName="иванов Иван Иваныч"},
                 new Teacher() {FullName="Ива2нов Иван Иваныч"},
                 new Teacher() {FullName="s Иван Иваныч"},
@@ -28,10 +28,26 @@ namespace Mephist.Tests
                 new Teacher()
             };
 
+            List<Teacher> uncorrect = new List<Teacher>
+            {
+                new Teacher() {FullName="Иванов Иван Иваныч" },
+                new Teacher() {FullName="Краевский Никита Алекснадрович"}
+                
+            };
+
             //Act
 
             //Assert
-        
+            foreach (var teacher in uncorrect)
+            {
+                Assert.False(Validate(teacher));
+            }
+
+            foreach (var teacher in correct)
+            {
+                Assert.True(Validate(teacher));
+            }
+
 
         }
 
