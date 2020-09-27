@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mephist
+namespace Mephist.Models.Intefaces
 {
     public interface IUploadInfo
     {
-        public User User { get; set; }
+        public User User { get; }
         public DateTime CreatedDate { get; }
         
 
