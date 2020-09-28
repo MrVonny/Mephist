@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,26 +13,25 @@ namespace Mephist.Models
     public class Employee
     {
         #region Properties
-
+        [Key]
+        public int Id { get; set; }
         [Display(Name = "ФИО")]
         [Required]
         [StringLength(50)]
+        [Column(TypeName ="nvarchar(50)")]
         public string FullName { get; set; }
         //[Institute]
-        public List<string> Institutions { get; set; }
+        public ICollection<string> Institutions { get; set; }
         //[Department]
         public string Department { get;  set; }
         //[Subject]
-        public List<string> Subjects { get; set; }
-        
-        public List<EducationalMaterial> EducationalMaterials { get; set; }
+        public ICollection<string> Subjects { get; set; }
+        public virtual ICollection<EducationalMaterial> EducationalMaterials { get; set; }
         //[Reviews]
-        public List<Review> Reviews { get; set; }
-
-        public IFormFile PhoroAvatar { get; set; }
-        public string ImageName { get; set; }
-        public byte[] PhotoFile { get; set; }
-        public string ImageMimeType { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
+        public int? PhotoAvatarId { get; set; }
+        public virtual Media PhotoAvatar { get; set; }
+        public virtual ICollection<Media> Photos { get; set; }
         
 
         #endregion
