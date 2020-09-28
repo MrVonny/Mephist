@@ -8,7 +8,7 @@ namespace Mephist
     public class EducationalMaterial
     {
         public EducationMaterialType Type { get; set; }
-        public List<MediaFile> Materials { get; set; }
+        public List<Media> Materials { get; set; }
 
     }
 }

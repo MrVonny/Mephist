@@ -9,7 +9,7 @@ namespace Mephist.Models
     public class UniversityData : IUniversityData
     {
         public void DepartmentsInitializeData()
-        {
+        { 
             throw new NotImplementedException();
         }
 

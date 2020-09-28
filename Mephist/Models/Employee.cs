@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,37 +18,21 @@ namespace Mephist.Models
         [StringLength(50)]
         public string FullName { get; set; }
         //[Institute]
-        public IReadOnlyList<string> Institutions
-        {
-            get
-            {
-                return institutions;
-            }
-
-            set
-            {
-                institutions = new List<string>(value);
-            }
-        }
-
+        public List<string> Institutions { get; set; }
         //[Department]
         public string Department { get;  set; }
         //[Subject]
-        public IReadOnlyList<string> Subjects {
-            get
-            {
-                return subjects;
-            }
-
-            set
-            {
-                institutions = new List<string>(value);
-            }
-        }
+        public List<string> Subjects { get; set; }
+        
         public List<EducationalMaterial> EducationalMaterials { get; set; }
         //[Reviews]
-        public IReadOnlyList<Review> Reviews { get; set; }
-        public MediaFile Photo { get; set; }
+        public List<Review> Reviews { get; set; }
+
+        public IFormFile PhoroAvatar { get; set; }
+        public string ImageName { get; set; }
+        public byte[] PhotoFile { get; set; }
+        public string ImageMimeType { get; set; }
+        
 
         #endregion
 
@@ -57,28 +42,10 @@ namespace Mephist.Models
             FullName = fullName;
         }
 
-        public Employee(string fullName, IReadOnlyList<string> institutions, string department,
-            IReadOnlyList<string> subjects, List<EducationalMaterial> educationalMaterials,
-            IReadOnlyList<Review> reviews) : this(fullName)
-        {
-            Institutions = institutions;
-            Department = department;
-            Subjects = subjects;
-            EducationalMaterials = educationalMaterials;
-            Reviews = reviews;
-        }
-
-
-
-
         #endregion
 
         #region Public Methods
-        public void AddSubject(string subject)
-        {
-            //Todo: проверка на валидность через IUniversityData
-            subjects.Add(subject);
-        }
+
         #endregion
 
         #region Private Methods
@@ -86,8 +53,7 @@ namespace Mephist.Models
         #endregion
 
         #region Fields
-        private List<string> subjects;
-        private List<string> institutions;
+
 
         #endregion
 
