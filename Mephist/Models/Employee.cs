@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -49,6 +50,7 @@ namespace Mephist.Models
 
         public string GetAvatarPath()
         {
+            
             if (Photos.Count == 0) return Media.DefaultAvatarPath;
             return Photos.First().GetPath();
         }

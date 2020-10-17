@@ -5,13 +5,22 @@
     float chScore = (float)Model.Rating.CharacterScore / Model.Rating.CharacterVotes;
     float exScore = (float)Model.Rating.ExamsScore / Model.Rating.ExamsVotes;
     float teachScore = (float)Model.Rating.TeachingScore / Model.Rating.TeachingVotes;
+    int exmasTicketsCount = Model.EducationalMaterials.Where(em => em.Type == EducationMaterialType.ExamTickets).Count();
+    int homeworkCount = Model.EducationalMaterials.Where(em => em.Type == EducationMaterialType.Homework).Count();
+    int labCount = Model.EducationalMaterials.Where(em => em.Type == EducationMaterialType.LaboratoryJournal).Count();
+    int lecturesCount = Model.EducationalMaterials.Where(em => em.Type == EducationMaterialType.Lectures).Count();
+    int sprusCount = Model.EducationalMaterials.Where(em => em.Type == EducationMaterialType.Spurs).Count();
+    int termPapersCount = Model.EducationalMaterials.Where(em => em.Type == EducationMaterialType.TermPaper).Count();
+    int otherCount = Model.EducationalMaterials.Where(em => em.Type == EducationMaterialType.Other).Count();
+
 }
 
 <tr>
     <td>
         <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.Id">@Model.FullName</a>
         <br />
-        <img  src="@Model.GetAvatarPath()" style="height: 100px; "/>
+        <img src="@Url.Action("GetAvatar",new { path = Model.Photos.First().GetPath() })" style="height: 100px; " />
+
     </td>
     <td>
         @foreach (var institute in Model.Institutions.Split(';'))
@@ -26,12 +35,44 @@
             <p>@institute</p>
         }
     </td>
-    <td>@Model.EducationalMaterials.Count</td>
+    <td>
+        @if (exmasTicketsCount > 0)
+        {
+            <a href="#">Билеты (@exmasTicketsCount)</a>
+        }
+        @if (homeworkCount > 0)
+        {
+            <a href="#">ДЗ (@homeworkCount)</a>
+        }
+        @if (labCount > 0)
+        {
+            <a href="#">Лабараторные работы (@labCount)</a>
+        }
+        @if (lecturesCount > 0)
+        {
+            <a href="#">Лекции (@lecturesCount)</a>
+        }
+        @if (sprusCount > 0)
+        {
+            <a href="#">Шпоры (@sprusCount)</a>
+        }
+        @if (termPapersCount > 0)
+        {
+            <a href="#">Курсовые работы (@termPapersCount)</a>
+        }
+        @if (otherCount > 0)
+        {
+            <a href="#">Другое (@otherCount)</a>
+        }
+
+    </td>
     <td>
         Характер: @chScore
         <br />
         Приём экзаменов: @exScore
         <br />
         Качество преподавания: @teachScore
+
+    <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.Id">Читать отзывы</a>
     </td>
 </tr>

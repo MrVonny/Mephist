@@ -25,8 +25,8 @@ namespace Mephist.Models
         public virtual  User User { get; set; }
         public DateTime CreatedDate { get; set; }
 
-        public static string DefaultAvatarPath = @"~\Content\Shared\DefaultAvatar.jpg";
-
+        public static string DefaultAvatarPath = @"Shared/DefaultAvatar.jpg";
+        
 
         public Media()
         {
@@ -34,7 +34,7 @@ namespace Mephist.Models
 
         public string GetPath()
         {
-            return Path.Combine(@"Content/", PartialMediaPath, MediaName);
+            return PartialMediaPath + "/" + MediaName;
         }
     }
 }

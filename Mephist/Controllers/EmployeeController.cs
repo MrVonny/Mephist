@@ -45,11 +45,10 @@ namespace Mephist.Controllers
             return View(model);
         }
 
-
-        public string GetPhotoAvatarPath(Employee employee)
+        public FileResult GetAvatar(string path)
         {
-            return @"~\Content\Shared\DefaultAvatar.jpg";
-
+            if (path == null) path = Media.DefaultAvatarPath;
+            return File($@"Content/{path}", "image/png");
         }
 
         public IActionResult AddTeacher()
