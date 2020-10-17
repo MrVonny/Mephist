@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div>
+
+</div>
+
+    <table>
+        <thead>
+            <tr>
+                <td>ФИО</td>
+                <td>Инстиут</td>
+                <td>Кафедра</td>
+                <td>Предметы</td>
+                <td>Учебные материалы</td>
+            </tr>
+        </thead>
+        
+        <tbody>
+            @foreach (Employee employee in ViewBag.EmployeesList)
+            {
+                @await Component.InvokeAsync("EmployeeProfile", employee);
+            }
+        </tbody>
+        </table>
+

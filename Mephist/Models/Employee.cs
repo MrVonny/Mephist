@@ -13,26 +13,30 @@ namespace Mephist.Models
     public class Employee
     {
         #region Properties
-        [Key]
+        //[Key]
         public int Id { get; set; }
         [Display(Name = "ФИО")]
-        [Required]
+        //[Required]
         [StringLength(50)]
-        [Column(TypeName ="nvarchar(50)")]
+        //[Column(TypeName = "nvarchar(50)")]
         public string FullName { get; set; }
         //[Institute]
-        public ICollection<string> Institutions { get; set; }
+        //[Column(TypeName = "nvarchar(50)")]
+        public string Institutions { get; set; } = "";
         //[Department]
-        public string Department { get;  set; }
+        //[Column(TypeName = "nvarchar(50)")]
+        public string Department { get; set; } = "";
+        //[Column(TypeName = "nvarchar(150)")]
         //[Subject]
-        public ICollection<string> Subjects { get; set; }
-        public virtual ICollection<EducationalMaterial> EducationalMaterials { get; set; }
+        public string Subjects { get; set; } = "";
+        public virtual List<EducationalMaterial> EducationalMaterials { get; set; } = new List<EducationalMaterial>();
         //[Reviews]
-        public virtual ICollection<Review> Reviews { get; set; }
-        public int? PhotoAvatarId { get; set; }
-        public virtual Media PhotoAvatar { get; set; }
-        public virtual ICollection<Media> Photos { get; set; }
-        
+        public virtual new List<Review> Reviews { get; set; } = new List<Review>();
+        //public int? PhotoAvatarId { get; set; }
+        //public virtual Media PhotoAvatar { get; set; }
+        public virtual List<Media> Photos { get; set; } = new List<Media>();
+        public virtual Rating Rating { get; set; } = new Rating();
+
 
         #endregion
 
@@ -40,6 +44,13 @@ namespace Mephist.Models
         public Employee(string fullName)
         {
             FullName = fullName;
+        }
+
+
+        public string GetAvatarPath()
+        {
+            if (Photos.Count == 0) return Media.DefaultAvatarPath;
+            return Photos.First().GetPath();
         }
 
         #endregion

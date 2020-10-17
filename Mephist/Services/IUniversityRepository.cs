@@ -11,6 +11,7 @@ namespace Mephist.Services
         IEnumerable<Employee> GetEmployees();
         IEnumerable<EducationalMaterial> GetEducationalMaterials();
         Employee GetEmployeeByName(string fullName);
+        Employee GetEmployeeById(int? id);
         Employee CreateEmployee(Employee employee);
 
         void SaveChanges();

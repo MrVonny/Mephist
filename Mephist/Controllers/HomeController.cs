@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mephist.Models;
+using Mephist.Services;
 
 namespace Mephist.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private IUniversityRepository _repository;
+        public HomeController(ILogger<HomeController> logger, IUniversityRepository repository)
         {
+            _repository = repository;
             _logger = logger;
         }
 

@@ -1,0 +1,37 @@
+﻿@model Mephist.Models.Employee
+
+@{
+    ViewData["Title"] = "SmallProfile";
+    float chScore = (float)Model.Rating.CharacterScore / Model.Rating.CharacterVotes;
+    float exScore = (float)Model.Rating.ExamsScore / Model.Rating.ExamsVotes;
+    float teachScore = (float)Model.Rating.TeachingScore / Model.Rating.TeachingVotes;
+}
+
+<tr>
+    <td>
+        <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.Id">@Model.FullName</a>
+        <br />
+        <img  src="@Model.GetAvatarPath()" style="height: 100px; "/>
+    </td>
+    <td>
+        @foreach (var institute in Model.Institutions.Split(';'))
+        {
+        <p>@institute</p>
+        }
+    </td>
+    <td>@Model.Department</td>
+    <td>
+        @foreach (var institute in Model.Subjects.Split(';'))
+        {
+            <p>@institute</p>
+        }
+    </td>
+    <td>@Model.EducationalMaterials.Count</td>
+    <td>
+        Характер: @chScore
+        <br />
+        Приём экзаменов: @exScore
+        <br />
+        Качество преподавания: @teachScore
+    </td>
+</tr>

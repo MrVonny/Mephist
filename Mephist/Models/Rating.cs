@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace Mephist.Models
 {
+
     public class Rating
     {
+
         [Key]
         public int Id { get; set; }
         public int? EmployeeId { get; set; }

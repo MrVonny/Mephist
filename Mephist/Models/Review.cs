@@ -10,12 +10,14 @@ namespace Mephist.Models
         [Key]
         public int Id { get; set; }  
         [Required]
-        [StringLength(10000)]
-        [Column(TypeName = "nvarchar(10000)")]
+        [StringLength(4000)]
+        [Column(TypeName = "nvarchar(4000)")]
         public string Text { get; set; }
         public bool Anonymously { get; set; }
+        public int? EmployeeId { get; set; }
+        public virtual Employee Employee { get; set; }
         public int? UserId { get; set; }
-        public User User { get; set; }
+        public virtual User User { get; set; }
         public DateTime CreatedDate { get; set; }
 
     }
