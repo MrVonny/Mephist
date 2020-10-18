@@ -11,7 +11,7 @@ namespace Mephist
         public int Id { get; set; }
         [Required]
         public string NickName { get; set; }
-        public virtual ICollection<Media> Photos { get; set; } = new List<Media>();
-        public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+        public virtual List<Media> Photos { get; set; } = new List<Media>();
+        public virtual List<Review> Reviews { get; set; } = new List<Review>();
     }
 }

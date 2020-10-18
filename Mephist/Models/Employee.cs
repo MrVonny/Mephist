@@ -32,27 +32,24 @@ namespace Mephist.Models
         public string Subjects { get; set; } = "";
         public virtual List<EducationalMaterial> EducationalMaterials { get; set; } = new List<EducationalMaterial>();
         //[Reviews]
-        public virtual new List<Review> Reviews { get; set; } = new List<Review>();
+        public virtual List<Review> Reviews { get; set; } = new List<Review>();
         //public int? PhotoAvatarId { get; set; }
         //public virtual Media PhotoAvatar { get; set; }
-        public virtual List<Media> Photos { get; set; } = new List<Media>();
+       
+        public virtual List<Media> Medias { get; set; } = new List<Media>();
         public virtual Rating Rating { get; set; } = new Rating();
 
 
         #endregion
 
         #region Constructors
-        public Employee(string fullName)
-        {
-            FullName = fullName;
-        }
 
 
         public string GetAvatarPath()
         {
             
-            if (Photos.Count == 0) return Media.DefaultAvatarPath;
-            return Photos.First().GetPath();
+            if (Medias.Count == 0) return Media.DefaultAvatarPath;
+            return Medias.First().GetPath();
         }
 
         #endregion

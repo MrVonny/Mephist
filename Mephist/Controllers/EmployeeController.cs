@@ -45,9 +45,12 @@ namespace Mephist.Controllers
             return View(model);
         }
 
-        public FileResult GetAvatar(string path)
+        public FileResult GetAvatar(int? employeeId)
         {
-            if (path == null) path = Media.DefaultAvatarPath;
+            Employee employee = _repository.GetEmployeeById(employeeId);
+            string path;
+            if (employee.Medias.Count == 0) path = Media.DefaultAvatarPath;
+            else path = employee.Medias.First().GetPath();
             return File($@"Content/{path}", "image/png");
         }
 

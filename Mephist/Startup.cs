@@ -29,7 +29,7 @@ namespace Mephist
 
             services.AddTransient<IUniversityRepository, UniversityRepository>();
             services.AddDbContext<UniversityContext>(options => 
-                    options.UseLazyLoadingProxies().UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Mephist;Trusted_Connection=True;"));
+                    options.UseLazyLoadingProxies().UseSqlServer("Server=VONNYPC;Database=Mephist;Trusted_Connection=True;"));
 
             services.AddControllersWithViews();
         }

@@ -5,10 +5,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
+    <Compile Remove="Migrations\20201018101216_LabJournal.cs" />
+    <Compile Remove="Migrations\20201018101216_LabJournal.Designer.cs" />
+    <Compile Remove="Migrations\20201018101639_LabJournal.cs" />
+    <Compile Remove="Migrations\20201018101639_LabJournal.Designer.cs" />
+    <Compile Remove="Migrations\20201018102118_LabJournal.cs" />
+    <Compile Remove="Migrations\20201018102118_LabJournal.Designer.cs" />
+    <Compile Remove="Migrations\20201018104507_LabJournal.cs" />
+    <Compile Remove="Migrations\20201018104507_LabJournal.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
   </ItemGroup>
 

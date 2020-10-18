@@ -7,7 +7,7 @@
 <div>
     <div>
         <div>
-            <img src="@Url.Action("GetAvatar",new { path = Model.Photos.First().GetPath() })" style="height: 200px; " />
+            <img src="@Url.Action("GetAvatar",new {employeeId = Model.Id})" style="height: 200px; " />
         </div>
         <div>
             Рейтинг
@@ -73,7 +73,7 @@
                 else
                 {
                     <h3>@review.User.NickName</h3>
-                    <img src="@Url.Action("GetAvatar",new { path = review.User.Photos.First().GetPath() })" style="height: 200px; " />
+                    <img src="@Url.Action("GetAvatar",new { employeeId = Model.Id})" style="height: 200px; " />
                 }
             </div>
             <p>@review.CreatedDate.ToShortDateString()</p>
