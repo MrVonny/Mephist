@@ -16,7 +16,7 @@ namespace Mephist.Models
         public bool Anonymously { get; set; }
         public int? EmployeeId { get; set; }
         public virtual Employee Employee { get; set; }
-        public int? UserId { get; set; }
+        public string UserId { get; set; }
         public virtual User User { get; set; }
         public DateTime CreatedDate { get; set; }
 

@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace Mephist
 {
@@ -25,13 +27,20 @@ namespace Mephist
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddDefaultIdentity<User>(options => {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.SignIn.RequireConfirmedEmail = false;
+            }).AddEntityFrameworkStores<UniversityContext>();
+
+
+
 
             services.AddTransient<IUniversityRepository, UniversityRepository>();
             services.AddDbContext<UniversityContext>(options => 
                     options.UseLazyLoadingProxies().UseSqlServer("Server=VONNYPC;Database=Mephist;Trusted_Connection=True;"));
-
+            
             services.AddControllersWithViews();
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,13 +62,17 @@ namespace Mephist
 
             app.UseRouting();
 
+            
+            app.UseAuthentication();
             app.UseAuthorization();
-
+            
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

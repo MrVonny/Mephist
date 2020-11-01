@@ -8,11 +8,13 @@ namespace Mephist.Services
 {
     public interface IUniversityRepository
     {
+        //TODO: IEnumerable to IQueryable
         IEnumerable<Employee> GetEmployees();
-        IEnumerable<EducationalMaterial> GetEducationalMaterials();
+        //IEnumerable<EducationalMaterial> GetEducationalMaterials();
         Employee GetEmployeeByName(string fullName);
         Employee GetEmployeeById(int? id);
         Employee CreateEmployee(Employee employee);
+        IQueryable<EducationalMaterial> GetEducationalMaterials();
 
         void SaveChanges();
         //Cupcake GetCupcakeById(int id);

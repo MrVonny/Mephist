@@ -20,6 +20,7 @@ namespace Mephist
         [Column(TypeName = "nvarchar(4000)")]
         [StringLength(4000)]
         public string Description { get; set; }
+        public string Subject { get; set; }
         public EducationMaterialType Type { get; set; }
         public virtual List<Media> Materials { get; set; }
 

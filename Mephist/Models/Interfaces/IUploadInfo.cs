@@ -7,7 +7,7 @@ namespace Mephist.Models.Intefaces
 {
     public interface IUploadInfo
     {
-        public int? UserId { get; set; }
+        public string UserId { get; set; }
         public User User { get; }
         public DateTime CreatedDate { get; }
         

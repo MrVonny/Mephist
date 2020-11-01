@@ -7,12 +7,19 @@ namespace Mephist
 {
     public enum EducationMaterialType
     {
+        [Display(Name ="Другое")]
         Other=-1,
-        Lectures=1,
+        [Display(Name = "Лекции")]
+        Lectures =1,
+        [Display(Name = "ДЗ")]
         Homework,
+        [Display(Name = "Шпоры")]
         Spurs,
+        [Display(Name = "Лабараторный журнал")]
         LaboratoryJournal,
+        [Display(Name = "Билеты")]
         ExamTickets,
+        [Display(Name = "Курсовая работа")]
         TermPaper       
     }
 }

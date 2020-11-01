@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewData["Title"] = "GetMaterials";
+}
+
+<h1>GetMaterials</h1>
+
+<table>
+    <thead>
+        <tr>
+            <td>Название</td>
+            <td>Тип</td>
+            <td>Преподаватель</td>
+            <td>Предмет</td>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach(EducationalMaterial em in ViewBag.EducationalMaterialsList)
+    {
+        <tr>
+            <td>@em.Name</td>
+            <td>@em.Type</td>
+            <td>@em.Employee.FullName</td>
+            <td>@em.Subject</td>
+        </tr>
+    }
+    </tbody>
+</table>

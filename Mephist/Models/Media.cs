@@ -21,7 +21,7 @@ namespace Mephist.Models
         public string MediaName { get; set; }
         public string PartialMediaPath { get; set; }
        // public string MediaMimeType { get; set; }
-        public int? UserId { get; set; }
+        public string UserId { get; set; }
         public virtual  User User { get; set; }
         public DateTime CreatedDate { get; set; }
 

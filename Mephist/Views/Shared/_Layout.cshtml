@@ -22,7 +22,7 @@
                         <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block ml-0 pl-0">
                             <li><a href="#home-section" class="nav-link">Главная</a></li>
                             <li><a asp-controller="Employee" asp-action="Index" class="nav-link">Сотрудники</a></li>
-                            <li><a href="#testimonials-section" class="nav-link">Учебные материалы</a></li>
+                            <li><a href="@Url.Action("GetMaterials","EducationalMaterials")" class="nav-link">Учебные материалы</a></li>
                         </ul>
                     </nav>
                 </div>

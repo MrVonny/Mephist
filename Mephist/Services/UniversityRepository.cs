@@ -101,9 +101,9 @@ namespace Mephist.Services
             throw new NotImplementedException();
         }
 
-        public IEnumerable<EducationalMaterial> GetEducationalMaterials()
+        public IQueryable<EducationalMaterial> GetEducationalMaterials()
         {
-            return _context.EducationalMaterials.ToList();
+            return _context.EducationalMaterials;
         }
 
         public Employee GetEmployeeById(int? id)

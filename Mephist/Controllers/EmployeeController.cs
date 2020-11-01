@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Mephist.Extensions;
 using Mephist.Models;
 using Mephist.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 
@@ -23,6 +24,7 @@ namespace Mephist.Controllers
             _environment = environment;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             List<Employee> employees = new List<Employee>(_repository.GetEmployees());
