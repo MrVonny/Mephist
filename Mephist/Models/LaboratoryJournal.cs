@@ -11,6 +11,7 @@ namespace Mephist.Models
 {
     public class LaboratoryJournal : EducationalMaterial
     {
+        
         [Column(TypeName = "nvarchar(20)")]
         public virtual string Work { get; set; }
         [Range(1,4)]

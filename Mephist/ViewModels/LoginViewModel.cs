@@ -8,15 +8,17 @@ namespace Mephist.ViewModels
 {
     public class LoginViewModel
     {
-        [Display(Name = "User Name")]
-        [Required(ErrorMessage = "Please enter your user name.")]
-        public string UserName { get; set; }
+        [Display(Name = "Email")]
+        [Required(ErrorMessage = "Введите email.")]
+        public string Email { get; set; }
 
-        [Display(Name = "Password")]
-        [Required(ErrorMessage = "Please enter your password.")]
+        [Display(Name = "Пароль")]
+        [Required(ErrorMessage = "Введите пароль.")]
         public string Password { get; set; }
 
-        [Display(Name = "Remember Me")]
+        [Display(Name = "Запонмить меня")]
         public bool RememberMe { get; set; }
+
+        public string ReturnUrl { get; set; }
     }
 }

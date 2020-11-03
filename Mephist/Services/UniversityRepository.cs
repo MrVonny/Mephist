@@ -96,19 +96,49 @@ namespace Mephist.Services
 
         }
 
+        #region EducationalMaterial
+        public void CreateEducationalMaterial(EducationalMaterial educationalMaterial)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteEducationalMaterialById(int? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<EducationalMaterial> GetEducationalMaterials()
+        {
+            return _context.EducationalMaterials;
+        }
+        #endregion
+
+        #region LabJournal
+        public void CreateLaboratoryJournal(LaboratoryJournal labJournal)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteLaboratoryJournalById(int? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<LaboratoryJournal> GetLaboratoryJournals()
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region Employee
         public Employee CreateEmployee(Employee employee)
         {
             throw new NotImplementedException();
         }
 
-        public IQueryable<EducationalMaterial> GetEducationalMaterials()
-        {
-            return _context.EducationalMaterials;
-        }
-
         public Employee GetEmployeeById(int? id)
         {
-            return _context.Employees.Single(emp => id==emp.Id);
+            return _context.Employees.Single(emp => id == emp.Id);
         }
 
         public Employee GetEmployeeByName(string fullName)
@@ -120,6 +150,11 @@ namespace Mephist.Services
         {
             return _context.Employees.ToList();
         }
+        #endregion
+
+        #region
+
+        #endregion
 
         public void SaveChanges()
         {

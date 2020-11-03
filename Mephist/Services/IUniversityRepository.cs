@@ -14,13 +14,16 @@ namespace Mephist.Services
         Employee GetEmployeeByName(string fullName);
         Employee GetEmployeeById(int? id);
         Employee CreateEmployee(Employee employee);
-        IQueryable<EducationalMaterial> GetEducationalMaterials();
+
+        IEnumerable<LaboratoryJournal> GetLaboratoryJournals();
+        void CreateLaboratoryJournal(LaboratoryJournal labJournal);
+        void DeleteLaboratoryJournalById(int? id);
+
+        IEnumerable<EducationalMaterial> GetEducationalMaterials();
+        void CreateEducationalMaterial(EducationalMaterial educationalMaterial);
+        void DeleteEducationalMaterialById(int? id);
 
         void SaveChanges();
-        //Cupcake GetCupcakeById(int id);
-        //void CreateCupcake(Cupcake cupcake);
-        //void DeleteCupcake(int id);
-        //
-        //IQueryable<Bakery> PopulateBakeriesDropDownList();
+
     }
 }

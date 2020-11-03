@@ -1,0 +1,63 @@
+﻿@model Mephist.ViewModels.EducationalMaterialViewModel
+@{
+    ViewData["Title"] = "AddMaterial";
+}
+
+<h1>Добавление материала</h1>
+<form method="post" asp-controller="Account" asp-action="Register">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="Name"></label><br />
+        <input asp-for="Name" />
+        <span asp-validation-for="Name"></span>
+    </div>
+    <div>
+        <label asp-for="Description"></label><br />
+        <input asp-for="Description" />
+        <span asp-validation-for="Description"></span>
+    </div>
+    <div>
+        <label asp-for="EmploeeFullName"></label><br />
+        <input asp-for="EmploeeFullName" />
+        <span asp-validation-for="EmploeeFullName"></span>
+    </div>
+    <div>
+        <label asp-for="Type"></label><br />
+        <input id="typeInput" asp-for="Type" />
+        <span asp-validation-for="Type"></span>
+    </div>
+    <div id="subject">
+        <label asp-for="Subject"></label><br />
+        <input asp-for="Subject" />
+        <span asp-validation-for="Subject"></span>
+    </div>
+    <div>
+        <label asp-for="Semester"></label><br />
+        <input asp-for="Semester" />
+        <span asp-validation-for="Semester"></span>
+    </div>
+    <div>
+        <label asp-for="Work"></label><br />
+        <input asp-for="Work" />
+        <span asp-validation-for="Work"></span>
+    </div>
+    <div>
+        <label asp-for="Year"></label><br />
+        <input asp-for="Year" />
+        <span asp-validation-for="Year"></span>
+    </div>
+    <div>
+        <label asp-for="Mark"></label><br />
+        <input asp-for="Mark" />
+        <span asp-validation-for="Mark"></span>
+    </div>
+
+    <div>
+        <input type="submit" value="Добавить" />
+    </div>
+</form>
+
+@section scripts
+{ 
+    <script src="~/js/AddMaterial.js"></script>
+}
