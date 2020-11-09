@@ -1,9 +1,11 @@
 ﻿$(document).ready(function () {
 
     $("#typeInput").change(function () {
-        if ($("#typeInput").val() == 1) {
-            $("#subject").hide()
-        }
+        if ($("#typeInput").val() == 4)
+            $("#labJournalInput").show();
+        else
+            $("#labJournalInput").hide();
+
     })
     
 

@@ -39,7 +39,7 @@ namespace Mephist.Controllers
         public IActionResult Details(int? id)
         {
             //if (id == null) return NotFound();
-            Employee model = _repository.GetEmployeeById(id);
+            Employee model = _repository.GetEmployee(id);
             //if (model == null) return NotFound();
 
             
@@ -49,7 +49,7 @@ namespace Mephist.Controllers
 
         public FileResult GetAvatar(int? employeeId)
         {
-            Employee employee = _repository.GetEmployeeById(employeeId);
+            Employee employee = _repository.GetEmployee(employeeId);
             string path;
             if (employee.Medias.Count == 0) path = Media.DefaultAvatarPath;
             else path = employee.Medias.First().GetPath();

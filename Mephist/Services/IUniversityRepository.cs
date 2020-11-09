@@ -2,26 +2,61 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Mephist.Services
 {
     public interface IUniversityRepository
     {
-        //TODO: IEnumerable to IQueryable
+        //TODO: IEnumerable to IQueryable      
+
+        //Read
         IEnumerable<Employee> GetEmployees();
-        //IEnumerable<EducationalMaterial> GetEducationalMaterials();
-        Employee GetEmployeeByName(string fullName);
-        Employee GetEmployeeById(int? id);
-        Employee CreateEmployee(Employee employee);
+        Employee GetEmployee(string fullName);
+        Employee GetEmployee(int? id);
+        //Create
+        void CreateEmployee(Employee employee);
+        //Delete
+        void DeleteEmployee(Employee employee);
+        void DeleteEmployee(int? id);
+        void DeleteEmployee(string fullname);
+
 
         IEnumerable<LaboratoryJournal> GetLaboratoryJournals();
+        LaboratoryJournal GetLaboratoryJournal(int? id);
         void CreateLaboratoryJournal(LaboratoryJournal labJournal);
-        void DeleteLaboratoryJournalById(int? id);
+        void DeleteLaboratoryJournal(int? id);
+        void DeleteLaboratoryJournal(LaboratoryJournal labJournal);
 
         IEnumerable<EducationalMaterial> GetEducationalMaterials();
+        EducationalMaterial GetEducationalMaterial(int? id);
         void CreateEducationalMaterial(EducationalMaterial educationalMaterial);
+        void DeleteEducationalMaterial(EducationalMaterial educationalMaterial);
         void DeleteEducationalMaterialById(int? id);
+
+        IEnumerable<Media> GetMedia();
+        Media GetMedia(int? id);
+        void CreateMedia(Media media);
+        void CreateMedia(IEnumerable<Media> medias);
+        void DeleteMedia(int? id);
+        void DeleteMedia(Media media);
+
+        IEnumerable<Review> GetReviews();
+        IEnumerable<Review> GetReviews(Employee employe);
+        IEnumerable<Review> GetReviews(string employeFullName);
+        Review GetReview(int? id);
+        void CreateReview(Review review);
+        void DeleteReview(Review review);
+        void DeleteReview(int? id);
+
+        IEnumerable<Rating> GetRating();
+        Rating GetRating(int? id);
+        void CreateRating(Rating rating);
+        void DeleteRating(int? id);
+        void DeleteRating(Rating rating);
+
+
 
         void SaveChanges();
 

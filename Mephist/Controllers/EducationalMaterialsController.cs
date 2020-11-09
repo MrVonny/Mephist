@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Mephist.Data;
+using Mephist.Extensions;
 using Mephist.Models;
 using Mephist.Services;
 using Mephist.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Mephist.Controllers
 {
@@ -15,13 +22,18 @@ namespace Mephist.Controllers
     {
 
         private IUniversityRepository _repository;
+        private IWebHostEnvironment _webHost;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public EducationalMaterialsController(IUniversityRepository repository)
+        public EducationalMaterialsController(IUniversityRepository repository, IWebHostEnvironment webHost, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _repository = repository;
+            _webHost = webHost;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        
         public IActionResult GetMaterials(EducationMaterialType[] types, string[] employees)
         {
             IEnumerable<EducationalMaterial> educationalMaterials = _repository.GetEducationalMaterials();
@@ -37,13 +49,46 @@ namespace Mephist.Controllers
         [Authorize]
         public IActionResult AddMaterial()
         {
+            var Types = new List<SelectListItem>()
+            {
+                new SelectListItem("Другое","-1"),
+                new SelectListItem("Лекции","1"),
+                new SelectListItem("ДЗ","2"),
+                new SelectListItem("Шпоры","3"),
+                new SelectListItem("Лабараторная работа","4"),
+                new SelectListItem("Билеты","5"),
+                new SelectListItem("Курсовая работа","6")
+            };
+            ViewBag.Types = Types;
             return View();
+
         }
 
-        [HttpPost]
         [Authorize]
-        public IActionResult AddMaterial(EducationalMaterialViewModel model)
+        [HttpPost]
+        public async Task<IActionResult> AddMaterial(EducationalMaterialViewModel model, IFormFileCollection uploads)
         {
+            List<Media> medias = new List<Media>();
+            if (uploads != null)
+            {
+                Employee employee = _repository.GetEmployee(model.EmploeeFullName);
+                foreach (var file in uploads)
+                {
+                    string patrialPath = "EducationalMaterials/" + model.Name.Transliterate();
+                    string path = Path.Combine(_webHost.WebRootPath, patrialPath);
+                    
+                    using(var fileSteam = new FileStream(path,FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileSteam);
+                    }
+
+                    medias.Add(new Media(null,employee,
+                        file.FileName,patrialPath,await _userManager.GetUserAsync(null)));
+                }
+                
+            }
+            else
+                ModelState.AddModelError(null, "Не загржен ни один файл");
             if(model.Type==EducationMaterialType.LaboratoryJournal)
             {
                 if (model.Work == null)
@@ -63,10 +108,11 @@ namespace Mephist.Controllers
                     LaboratoryJournal lj = new LaboratoryJournal()
                     {
                         Name = model.Name,
-                        Employee = _repository.GetEmployeeByName(model.EmploeeFullName),                    
+                        Employee = _repository.GetEmployee(model.EmploeeFullName),                    
                         Description=model.Description,
                         Subject=model.Subject,
                         Type=model.Type,
+                        Materials=medias,
 
                         Mark = model.Mark ?? throw new Exception("Wrong model"),
                         Semester = model.Semester ?? throw new Exception("Wrong model"),
@@ -74,6 +120,9 @@ namespace Mephist.Controllers
                         Year = model.Year ?? throw new Exception("Wrong model")
                     };
                     _repository.CreateLaboratoryJournal(lj);
+                    foreach (var media in medias)
+                        media.EducationalMaterial = lj;
+                    _repository.CreateMedia(medias);
                     _repository.SaveChanges();
                 }
                 else
@@ -81,12 +130,16 @@ namespace Mephist.Controllers
                     EducationalMaterial em = new EducationalMaterial()
                     {
                         Name = model.Name,
-                        Employee = _repository.GetEmployeeByName(model.EmploeeFullName),
+                        Employee = _repository.GetEmployee(model.EmploeeFullName),
                         Description = model.Description,
                         Subject = model.Subject,
-                        Type = model.Type
+                        Type = model.Type,
+                        Materials = medias
                     };
                     _repository.CreateEducationalMaterial(em);
+                    foreach (var media in medias)
+                        media.EducationalMaterial = em;                 
+                    _repository.CreateMedia(medias);
                     _repository.SaveChanges();
                 }
 

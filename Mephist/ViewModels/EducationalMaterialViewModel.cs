@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,6 +38,8 @@ namespace Mephist.ViewModels
         [Display(Name="Оценка")]
         [Range(60, 100)]
         public virtual int? Mark { get; set; }
+        
+
 
     }
 }

@@ -27,18 +27,27 @@ namespace Mephist
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDefaultIdentity<User>(options => {
+            services.AddIdentity<User, IdentityRole>(options => {
                 options.SignIn.RequireConfirmedAccount = false;
                 options.SignIn.RequireConfirmedEmail = false;
             }).AddEntityFrameworkStores<UniversityContext>();
 
-
-
-
             services.AddTransient<IUniversityRepository, UniversityRepository>();
             services.AddDbContext<UniversityContext>(options => 
-                    options.UseLazyLoadingProxies().UseSqlServer("Server=VONNYPC;Database=Mephist;Trusted_Connection=True;"));
-            
+                    options.UseLazyLoadingProxies().UseSqlite(Configuration.GetConnectionString("SQLite")));
+
+            services.Configure<IdentityOptions>(option =>
+            {
+                option.Password.RequireNonAlphanumeric = false;
+                
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                
+            });
+
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

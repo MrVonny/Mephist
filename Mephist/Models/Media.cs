@@ -32,6 +32,16 @@ namespace Mephist.Models
         {
         }
 
+        public Media(EducationalMaterial educationalMaterial, Employee employee, string mediaName, string partialMediaPath, User user)
+        {
+            EducationalMaterial = educationalMaterial;
+            Employee = employee;
+            MediaName = mediaName;
+            PartialMediaPath = partialMediaPath;
+            User = user;
+            CreatedDate = DateTime.Now;
+        }
+
         public string GetPath()
         {
             return PartialMediaPath + "/" + MediaName;

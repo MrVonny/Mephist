@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Mephist.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 namespace Mephist.Controllers
 {
+    
     public class AccountController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -19,6 +21,7 @@ namespace Mephist.Controllers
             _signInManager = signInManager;
         }
 
+        
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
