@@ -24,7 +24,7 @@ namespace Mephist.Controllers
             _environment = environment;
         }
 
-        [Authorize]
+        
         public IActionResult Index()
         {
             List<Employee> employees = new List<Employee>(_repository.GetEmployees());
@@ -40,9 +40,7 @@ namespace Mephist.Controllers
         {
             //if (id == null) return NotFound();
             Employee model = _repository.GetEmployee(id);
-            //if (model == null) return NotFound();
-
-            
+            //if (model == null) return NotFound();       
 
             return View(model);
         }

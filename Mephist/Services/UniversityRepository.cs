@@ -19,8 +19,7 @@ namespace Mephist.Services
             _context = context;
             /*
             Employee samedov = new Employee()
-            {
-                
+            {              
                 FullName = "Самедов Виктор Витальевич",
                 Department = "40",
                 Institutions = "ИЯФиТ;ИИКС",
@@ -28,6 +27,9 @@ namespace Mephist.Services
 
             };
 
+            _context.Employees.Add(samedov);
+            SaveChanges();
+            
             _context.Employees.Add(samedov);
             _context.SaveChanges();
             User user1 = new User()
@@ -101,28 +103,28 @@ namespace Mephist.Services
 
         public IEnumerable<EducationalMaterial> GetEducationalMaterials()
         {
-            throw new NotImplementedException();
+            return _context.EducationalMaterials.ToList();
         }
 
         public EducationalMaterial GetEducationalMaterial(int? id)
         {
-            throw new NotImplementedException();
+            return _context.EducationalMaterials.Single(x => x.Id == id);
         }
 
         public void CreateEducationalMaterial(EducationalMaterial educationalMaterial)
         {
-            throw new NotImplementedException();
+            _context.EducationalMaterials.Add(educationalMaterial);
         }
 
 
         public void DeleteEducationalMaterial(EducationalMaterial educationalMaterial)
         {
-            throw new NotImplementedException();
+            _context.EducationalMaterials.Remove(educationalMaterial);
         }
 
-        public void DeleteEducationalMaterialById(int? id)
+        public void DeleteEducationalMaterial(int? id)
         {
-            throw new NotImplementedException();
+            DeleteEducationalMaterial(GetEducationalMaterial(id));
         }
 
         #endregion
@@ -131,27 +133,27 @@ namespace Mephist.Services
 
         public IEnumerable<LaboratoryJournal> GetLaboratoryJournals()
         {
-            throw new NotImplementedException();
+            return _context.LaboratoryJournals.ToList();
         }
 
         public LaboratoryJournal GetLaboratoryJournal(int? id)
         {
-            throw new NotImplementedException();
+            return _context.LaboratoryJournals.Single(x=>x.Id==id);
         }
 
         public void CreateLaboratoryJournal(LaboratoryJournal labJournal)
         {
-            throw new NotImplementedException();
+            _context.LaboratoryJournals.Add(labJournal);
         }
 
         public void DeleteLaboratoryJournal(int? id)
         {
-            throw new NotImplementedException();
+            DeleteLaboratoryJournal(GetLaboratoryJournal(id));
         }
 
         public void DeleteLaboratoryJournal(LaboratoryJournal labJournal)
         {
-            throw new NotImplementedException();
+            _context.LaboratoryJournals.Remove(labJournal);
         }
 
         #endregion
@@ -198,32 +200,37 @@ namespace Mephist.Services
 
         public IEnumerable<Media> GetMedia()
         {
-            throw new NotImplementedException();
+            return _context.Medias.ToList();
         }
 
         public Media GetMedia(int? id)
         {
-            throw new NotImplementedException();
+            return _context.Medias.Single(x => x.Id == id);
         }
 
         public void CreateMedia(Media media)
         {
-            throw new NotImplementedException();
+            _context.Medias.Add(media);
         }
 
-        public void CreateMedia(IEnumerable<Media> medias)
+        public void CreateMediaRange(IEnumerable<Media> medias)
         {
-            throw new NotImplementedException();
+            _context.Medias.AddRange(medias);
+        }
+
+        public void CreateMediaRange(Media[] medias)
+        {
+            _context.Medias.AddRange(medias);
         }
 
         public void DeleteMedia(int? id)
         {
-            throw new NotImplementedException();
+            DeleteMedia(GetMedia(id));
         }
 
         public void DeleteMedia(Media media)
         {
-            throw new NotImplementedException();
+            _context.Medias.Remove(media);
         }
 
         #endregion
@@ -232,38 +239,44 @@ namespace Mephist.Services
 
         public IEnumerable<Review> GetReviews()
         {
-            throw new NotImplementedException();
+            return _context.Reviews.ToList();
         }
 
-        public IEnumerable<Review> GetReviews(Employee employe)
+        public IEnumerable<Review> GetReviews(Employee employee)
         {
-            throw new NotImplementedException();
+            return _context.Reviews.Where(em => em.EmployeeId == employee.Id).ToList();
+        }
+
+        public IEnumerable<Review> GetReviews(User user)
+        {
+            return _context.Reviews.Where(em => em.UserId == user.Id).ToList();
         }
 
         public IEnumerable<Review> GetReviews(string employeFullName)
         {
-            throw new NotImplementedException();
+            Employee employee = GetEmployee(employeFullName);
+            return _context.Reviews.Where(em => em.EmployeeId == employee.Id).ToList();
         }
 
         public Review GetReview(int? id)
         {
-            throw new NotImplementedException();
+            return _context.Reviews.Single(x => x.Id == id);
         }
 
         public void CreateReview(Review review)
         {
-            throw new NotImplementedException();
+            _context.Reviews.Add(review);
         }
 
 
         public void DeleteReview(Review review)
         {
-            throw new NotImplementedException();
+            _context.Reviews.Remove(review);
         }
 
         public void DeleteReview(int? id)
         {
-            throw new NotImplementedException();
+            DeleteReview(GetReview(id));
         }
 
         #endregion

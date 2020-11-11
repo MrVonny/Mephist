@@ -18,11 +18,18 @@
                 </div>
                 <div class="col-12 col-md-9 col-xl-8 main-menu">
                     <nav class="site-navigation position-relative text-right" role="navigation">
-
                         <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block ml-0 pl-0">
                             <li><a href="#home-section" class="nav-link">Главная</a></li>
                             <li><a asp-controller="Employee" asp-action="Index" class="nav-link">Сотрудники</a></li>
-                            <li><a href="@Url.Action("GetMaterials","EducationalMaterials")" class="nav-link">Учебные материалы</a></li>
+                            <li>
+                                    <a class="nav-link dropdown-toggle"id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Учебные материалы
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" asp-action="GetMaterials" asp-controller="EducationalMaterials">Все маетриалы</a>
+                                        <a class="dropdown-item" asp-action="GetLabJournals" asp-controller="EducationalMaterials">Лабаратораные работы</a>
+                                    </div>
+                            </li>
                         </ul>
                     </nav>
                 </div>

@@ -4,8 +4,8 @@
 }
 
 <h1>Добавление материала</h1>
-<form method="post" asp-controller="EducationalMaterials" asp-action="AddMaterial">
-    <div asp-validation-summary="ModelOnly"></div>
+<form method="post" asp-controller="EducationalMaterials" asp-action="AddMaterial" enctype="multipart/form-data">
+    <div asp-validation-summary="All"></div> 
     <div>
         <label asp-for="Name"></label><br />
         <input asp-for="Name" />
@@ -34,7 +34,8 @@
         <span asp-validation-for="Type"></span>
     </div>
     <div>
-        <input type="file" name="uloads" multiple />
+        <input type="file" name="uploads" multiple />
+            
     </div>
     <div id="labJournalInput" style="display: none">
         <div>

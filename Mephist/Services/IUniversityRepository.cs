@@ -33,17 +33,19 @@ namespace Mephist.Services
         EducationalMaterial GetEducationalMaterial(int? id);
         void CreateEducationalMaterial(EducationalMaterial educationalMaterial);
         void DeleteEducationalMaterial(EducationalMaterial educationalMaterial);
-        void DeleteEducationalMaterialById(int? id);
+        void DeleteEducationalMaterial(int? id);
 
         IEnumerable<Media> GetMedia();
         Media GetMedia(int? id);
         void CreateMedia(Media media);
-        void CreateMedia(IEnumerable<Media> medias);
+        void CreateMediaRange(IEnumerable<Media> medias);
+        void CreateMediaRange(Media[] medias);
         void DeleteMedia(int? id);
         void DeleteMedia(Media media);
 
         IEnumerable<Review> GetReviews();
-        IEnumerable<Review> GetReviews(Employee employe);
+        IEnumerable<Review> GetReviews(Employee employee);
+        IEnumerable<Review> GetReviews(User user);
         IEnumerable<Review> GetReviews(string employeFullName);
         Review GetReview(int? id);
         void CreateReview(Review review);

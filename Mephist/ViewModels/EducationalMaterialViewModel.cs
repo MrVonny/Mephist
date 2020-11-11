@@ -17,7 +17,7 @@ namespace Mephist.ViewModels
         [Required]
         [StringLength(50)]
         public string Name { get; set; }
-
+            
         [Display(Name = "Описание")]
         [StringLength(4000)]
         [DataType(DataType.MultilineText)]
