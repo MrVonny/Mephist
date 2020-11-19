@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Mephist.Migrations
 {
-    public partial class InitialDB : Migration
+    public partial class CreatedDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -52,10 +52,10 @@ namespace Mephist.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FullName = table.Column<string>(maxLength: 50, nullable: true),
-                    Institutions = table.Column<string>(nullable: true),
-                    Department = table.Column<string>(nullable: true),
-                    Subjects = table.Column<string>(nullable: true)
+                    FullName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Institutions = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Department = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Subjects = table.Column<string>(type: "nvarchar(150)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -180,7 +180,7 @@ namespace Mephist.Migrations
                     Subject = table.Column<string>(nullable: true),
                     Type = table.Column<int>(nullable: false),
                     Discriminator = table.Column<string>(nullable: false),
-                    Work = table.Column<string>(type: "nvarchar(20)", nullable: true),
+                    Work = table.Column<string>(type: "nvarchar(5)", nullable: true),
                     Semester = table.Column<int>(nullable: true),
                     Year = table.Column<int>(nullable: true),
                     Mark = table.Column<int>(nullable: true)
@@ -258,8 +258,8 @@ namespace Mephist.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EducationalMaterialId = table.Column<int>(nullable: true),
                     EmployeeId = table.Column<int>(nullable: true),
-                    MediaName = table.Column<string>(nullable: true),
-                    PartialMediaPath = table.Column<string>(nullable: true),
+                    MediaName = table.Column<string>(nullable: false),
+                    PartialMediaPath = table.Column<string>(nullable: false),
                     UserId = table.Column<string>(nullable: true),
                     CreatedDate = table.Column<DateTime>(nullable: false)
                 },

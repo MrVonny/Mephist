@@ -12,6 +12,8 @@ namespace Mephist.ViewModels
 
         [Display(Name = "Логин")]
         [Required(ErrorMessage = "Введите логин")]
+        [MaxLength(30, ErrorMessage = "Максимальная длина 30 символов")]
+        [MinLength(5, ErrorMessage = "Минимальная длина 5 символов")]
         public string UserName { get; set; }
 
 

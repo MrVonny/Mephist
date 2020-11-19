@@ -13,11 +13,13 @@ namespace Mephist.Models
         [StringLength(4000)]
         [Column(TypeName = "nvarchar(4000)")]
         public string Text { get; set; }
+        [Required]
         public bool Anonymously { get; set; }
         public int? EmployeeId { get; set; }
         public virtual Employee Employee { get; set; }
         public string UserId { get; set; }
         public virtual User User { get; set; }
+        [Required]
         public DateTime CreatedDate { get; set; }
 
     }

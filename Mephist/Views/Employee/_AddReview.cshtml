@@ -1,0 +1,12 @@
+﻿@model Mephist.ViewModels.ReviewViewModel
+
+
+
+<form method="post" asp-action="AddReview" asp-controller="Employee">
+    <div asp-validation-summary="All"></div>
+    <input hidden asp-for="EmployeeId" value="@Model.EmployeeId" />
+    <textarea type="text" asp-for="Text"></textarea><br />
+    <input type="checkbox" asp-for="Anonymously" />
+    <label>Анонимно</label>
+    <input type="submit" value="Оставить отзыв" />
+</form>

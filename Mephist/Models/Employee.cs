@@ -14,20 +14,20 @@ namespace Mephist.Models
     public class Employee
     {
         #region Properties
-        //[Key]
+        [Key]
         public int Id { get; set; }
         [Display(Name = "ФИО")]
-        //[Required]
+        [Required]
         [StringLength(50)]
-        //[Column(TypeName = "nvarchar(50)")]
+        [Column(TypeName = "nvarchar(50)")]
         public string FullName { get; set; }
         //[Institute]
-        //[Column(TypeName = "nvarchar(50)")]
+        [Column(TypeName = "nvarchar(50)")]
         public string Institutions { get; set; } = "";
         //[Department]
-        //[Column(TypeName = "nvarchar(50)")]
+        [Column(TypeName = "nvarchar(50)")]
         public string Department { get; set; } = "";
-        //[Column(TypeName = "nvarchar(150)")]
+        [Column(TypeName = "nvarchar(150)")]
         //[Subject]
         public string Subjects { get; set; } = "";
         public virtual List<EducationalMaterial> EducationalMaterials { get; set; } = new List<EducationalMaterial>();

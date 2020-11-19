@@ -15,14 +15,18 @@ namespace Mephist.Models
         [Key]
         public int Id { get; set; }
         public int? EducationalMaterialId { get; set; }
+        [Required]
+        public string ContentType { get; set; }
         public virtual EducationalMaterial EducationalMaterial { get; set; }
         public int? EmployeeId { get; set; }
         public virtual Employee Employee { get; set; }
+        [Required]
         public string MediaName { get; set; }
+        [Required]
         public string PartialMediaPath { get; set; }
-       // public string MediaMimeType { get; set; }
         public string UserId { get; set; }
         public virtual  User User { get; set; }
+        [Required]
         public DateTime CreatedDate { get; set; }
 
         public static string DefaultAvatarPath = @"Shared/DefaultAvatar.jpg";
@@ -32,15 +36,26 @@ namespace Mephist.Models
         {
         }
 
-        public Media(EducationalMaterial educationalMaterial, Employee employee, string mediaName, string partialMediaPath, User user)
+        public Media(EducationalMaterial educationalMaterial, string mediaName,string contentType, string partialMediaPath, User user)
         {
             EducationalMaterial = educationalMaterial;
-            Employee = employee;
+            ContentType = contentType;
             MediaName = mediaName;
             PartialMediaPath = partialMediaPath;
             User = user;
             CreatedDate = DateTime.Now;
         }
+
+        public Media(Employee employee, string mediaName, string contentType, string partialMediaPath, User user)
+        {
+            Employee = employee;
+            ContentType = contentType;
+            MediaName = mediaName;
+            PartialMediaPath = partialMediaPath;
+            User = user;
+            CreatedDate = DateTime.Now;
+        }
+
 
         public string GetPath()
         {

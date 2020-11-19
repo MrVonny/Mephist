@@ -11,13 +11,17 @@ namespace Mephist.Models
 {
     public class LaboratoryJournal : EducationalMaterial
     {
-        
-        [Column(TypeName = "nvarchar(20)")]
+        [Required]
+        [Column(TypeName = "nvarchar(5)")]
         public virtual string Work { get; set; }
+        [Required]
         [Range(1,4)]
         public virtual int Semester { get; set; }
+        [Required]
+        [Range(1990,2021)]
         public virtual int Year { get; set; }
         [Range(0,100)]
+        [Required]
         public virtual int Mark { get; set; }
     }
 }

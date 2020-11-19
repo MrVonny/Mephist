@@ -170,6 +170,8 @@ namespace Mephist.Services
         }
         public  Employee GetEmployee(int? id)
         {
+            if (id == null)
+                return null;
             return _context.Employees.Single(em =>em.Id==id);
         }
         //Create
@@ -311,6 +313,24 @@ namespace Mephist.Services
 
         #endregion
 
+        #region User
+        
+        public User GetUserById(string id)
+        {
+           return _context.Users.Single(x => id.Equals(x.Id));
+        }
+
+        public User GetUserByEmail(string email)
+        {
+            return _context.Users.Single(x => email.ToUpper().Equals(x.NormalizedEmail));
+
+        }
+
+        public User GetUserByUserName(string userName)
+        {
+            return _context.Users.Single(x => userName.ToUpper().Equals(x.UserName.Normalize()));
+        }
+        #endregion
 
         public void SaveChanges()
         {

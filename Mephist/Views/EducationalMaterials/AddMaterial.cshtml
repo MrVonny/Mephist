@@ -4,8 +4,8 @@
 }
 
 <h1>Добавление материала</h1>
-<form method="post" asp-controller="EducationalMaterials" asp-action="AddMaterial" enctype="multipart/form-data">
-    <div asp-validation-summary="All"></div> 
+<form method="post"  asp-controller="EducationalMaterials" asp-action="AddMaterial" enctype="multipart/form-data">
+    <div asp-validation-summary="All"></div>
     <div>
         <label asp-for="Name"></label><br />
         <input asp-for="Name" />
@@ -17,9 +17,9 @@
         <span asp-validation-for="Description"></span>
     </div>
     <div>
-        <label asp-for="EmploeeFullName"></label><br />
-        <input asp-for="EmploeeFullName" />
-        <span asp-validation-for="EmploeeFullName"></span>
+        <label asp-for="EmployeeFullName"></label><br />
+        <input asp-for="EmployeeFullName" />
+        <span asp-validation-for="EmployeeFullName"></span>
     </div>
     <div>
         <label asp-for="Subject"></label><br />
@@ -33,10 +33,8 @@
         </select>
         <span asp-validation-for="Type"></span>
     </div>
-    <div>
-        <input type="file" name="uploads" multiple />
-            
-    </div>
+
+
     <div id="labJournalInput" style="display: none">
         <div>
             <label asp-for="Semester"></label><br />
@@ -58,16 +56,43 @@
             <input asp-for="Mark" />
             <span asp-validation-for="Mark"></span>
         </div>
+        <input name="query" hidden id="query" type="text"/>
 
     </div>
 
+    <div>
+        <label id="uploads-label">Файлы</label>
+        <input id="uploads" accept="image/*" type="file" name="uploads" multiple />
+    </div>
+    <style>
+        #uploads-preview {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            width: 600px;
+        }
 
+        #uploads-preview li {
+            margin: 5px 5px 5px 0;
+            padding: 1px;
+            float: left;
+            width: 200px;
+            height: 300px;
+            font-size: 4em;
+            text-align: center;
+        }
+    </style>
+    <ul id="uploads-preview">
+    </ul>
     <div>
         <input type="submit" value="Добавить" />
     </div>
 </form>
 
 @section scripts
-{ 
+{
     <script src="~/js/AddMaterial.js"></script>
+    <script src="~/js/EmployeeAutocomplete.js"></script>
+    <script src="~/js/dropzone.js"></script>
+    <script src="~/js/SortableFiles.js"></script>
 }

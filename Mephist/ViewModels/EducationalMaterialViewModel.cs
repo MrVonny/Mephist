@@ -11,7 +11,7 @@ namespace Mephist.ViewModels
     {
         [Required]
         [Display(Name="Преподаватель")]
-        public string EmploeeFullName { get; set; }
+        public string EmployeeFullName { get; set; }
 
         [Display(Name = "Название")]
         [Required]
@@ -28,17 +28,17 @@ namespace Mephist.ViewModels
         [Required]
         [Display(Name = "Тип")]
         public EducationMaterialType Type { get; set; }
-        [Display(Name="Номер работы")]
+        [Display(Name = "Номер работы")]    
         public virtual string Work { get; set; }
         [Range(1, 4)]
-        [Display(Name = "Семестр")]
+        [Display(Name = "Семестр")]       
         public virtual int? Semester { get; set; }
-        [Display(Name="Год")]
+        [Display(Name = "Год")]       
+        [Range(1990,2030)]
         public virtual int? Year { get; set; }
-        [Display(Name="Оценка")]
-        [Range(60, 100)]
+        [Display(Name = "Оценка")]
+        [Range(60, 100)]        
         public virtual int? Mark { get; set; }
-        
 
 
     }

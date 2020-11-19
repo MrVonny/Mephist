@@ -58,6 +58,9 @@ namespace Mephist.Services
         void DeleteRating(int? id);
         void DeleteRating(Rating rating);
 
+        User GetUserById(string id);
+        User GetUserByEmail(string email);
+        User GetUserByUserName(string userName);
 
 
         void SaveChanges();

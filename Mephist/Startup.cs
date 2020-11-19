@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace Mephist
 {
@@ -30,15 +32,18 @@ namespace Mephist
             services.AddIdentity<User, IdentityRole>(options => {
                 options.SignIn.RequireConfirmedAccount = false;
                 options.SignIn.RequireConfirmedEmail = false;
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequireNonAlphanumeric = false;
             }).AddEntityFrameworkStores<UniversityContext>();
 
             services.AddTransient<IUniversityRepository, UniversityRepository>();
-            services.AddDbContext<UniversityContext>(options => 
-                    options.UseLazyLoadingProxies().UseSqlite(Configuration.GetConnectionString("SQLite")));
+            services.AddDbContext<UniversityContext>(options =>
+                    options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("PCMSSQLSERVER")));
 
             services.Configure<IdentityOptions>(option =>
             {
-                option.Password.RequireNonAlphanumeric = false;
+                
+                
                 
             });
 
@@ -67,7 +72,16 @@ namespace Mephist
             }
             app.UseHttpsRedirection();
 
+            app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseFileServer(new FileServerOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(env.ContentRootPath, "node_modules")
+                ),
+                RequestPath = "/node_modules",
+                EnableDirectoryBrowsing = false
+            });
 
             app.UseRouting();
 

@@ -18,8 +18,10 @@
     @foreach(EducationalMaterial em in ViewBag.EducationalMaterialsList)
     {
         <tr>
-            <td>@em.Name</td>
-            <td>@em.Type</td>
+            <td>
+                <label>@em.Name</label>
+                <a asp-action="Download" asp-controller="EducationalMaterials" asp-route-id="@em.Id">Скачать</a>
+            </td>
             <td>@em.Employee.FullName</td>
             <td>@em.Subject</td>
         </tr>

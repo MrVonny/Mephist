@@ -7,8 +7,10 @@
 <div>
     <div>
         <div>
-            <img src="@Url.Action("GetAvatar",new {employeeId = Model.Id})" style="height: 200px; " />
+            <img src="@Url.Action("GetAvatar", new { employeeId = Model.Id })" style="height: 200px; " />
+            
         </div>
+        
         <div>
             Рейтинг
         </div>
@@ -58,22 +60,24 @@
             </tbody>
         </table>
         <h1>Отзывы</h1>
-        <form method="post">
-            <input type="text" /><br />
-            <input type="checkbox" />
-            <label>Анонимно</label>
-        </form>
-        @foreach (var review in Model.Reviews)
+        @{
+            var reviewVM = new Mephist.ViewModels.ReviewViewModel() { EmployeeId = Model.Id };
+            await Html.RenderPartialAsync("_AddReview", reviewVM);
+
+        }
+        @for (int i = Model.Reviews.Count - 1; i >= 0; i--)
         {
+            var review = Model.Reviews[i];
             <div>
                 @if (review.Anonymously)
                 {
+                    <h3>Аноним</h3>
                     <img src="@Url.Action("GetAvatar")" style="height: 200px; " />
                 }
                 else
                 {
                     <h3>@review.User.UserName</h3>
-                    <img src="@Url.Action("GetAvatar",new { employeeId = Model.Id})" style="height: 200px; " />
+                    <img src="@Url.Action("GetAvatar")" style="height: 200px; " />
                 }
             </div>
             <p>@review.CreatedDate.ToShortDateString()</p>

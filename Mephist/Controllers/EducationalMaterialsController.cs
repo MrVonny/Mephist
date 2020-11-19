@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Runtime;
 using System.Threading.Tasks;
 using Mephist.Data;
 using Mephist.Extensions;
@@ -15,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+
 
 namespace Mephist.Controllers
 {
@@ -57,6 +60,49 @@ namespace Mephist.Controllers
             return View();
         }
 
+        
+        public IActionResult Download(int id)
+        {
+            EducationalMaterial em = _repository.GetEducationalMaterial(id);
+            List<Media> materials = em.Materials;
+            List<byte[]> files = new List<byte[]>();
+            byte[] compressed;
+
+            foreach (var material in materials)
+            {
+                string path = _webHost.WebRootPath;
+                files.Add(System.IO.File.ReadAllBytes(Path.Combine(path, material.GetPath())));
+
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    for (int i = 0; i < materials.Count; i++)
+                    {
+                        var fileInArchive = archive.CreateEntry(materials[i].MediaName, CompressionLevel.Optimal);
+
+                        using (var entryStream = fileInArchive.Open())
+                        using (var fileToCompressStream = new MemoryStream(files[i]))
+                        {
+                            fileToCompressStream.CopyTo(entryStream);
+                        }
+                        
+                    }
+                    archive.Dispose();
+
+                    compressed = memoryStream.ToArray();
+                }
+
+                
+            }
+            //GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+            GC.Collect(2, GCCollectionMode.Forced, false, true);
+            
+            return File(compressed, "application/zip", em.Name + ".zip");
+        }
+
         [Authorize]
         public IActionResult AddMaterial()
         {
@@ -68,93 +114,130 @@ namespace Mephist.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddMaterial(EducationalMaterialViewModel model, IFormFileCollection uploads)
+        public async Task<IActionResult> AddLabJournal(EducationalMaterialViewModel model, string query, IFormFileCollection uploads)
         {
-            if (model.Type == EducationMaterialType.LaboratoryJournal)
-            {
-                if (model.Work == null)
-                    ModelState.AddModelError("Work", "Введите название работы");
-                if (model.Year == null)
-                    ModelState.AddModelError("Year", "Введите год выполнения работы");
-                if (model.Semester == null)
-                    ModelState.AddModelError("Semester", "Введите семестр выполнения работы");
-                if (model.Mark == null)
-                    ModelState.AddModelError("Mark", "Ввеодите оценку за работу");
-            }
             List<Media> medias = new List<Media>();
-            if (uploads.Count>0)
+            try
             {
-                Employee employee=null;
-                try
+                Employee employee = _repository.GetEmployee(model.EmployeeFullName);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("FullName", ex.Message);
+            }
+
+            if (model.Work == null)
+                ModelState.AddModelError("Work", "Введите название работы");
+            if (model.Year == null)
+                ModelState.AddModelError("Year", "Введите год выполнения работы");
+            if (model.Semester == null)
+                ModelState.AddModelError("Semester", "Введите семестр выполнения работы");
+            if (model.Mark == null)
+                ModelState.AddModelError("Mark", "Ввеодите оценку за работу");
+
+            if (uploads.Count <= 0)
+                ModelState.AddModelError("Files", "Не загржен ни один файл");
+
+            if (ModelState.IsValid)
+            {
+                LaboratoryJournal lj = new LaboratoryJournal()
                 {
-                    employee = _repository.GetEmployee(model.EmploeeFullName);
-                }
-                catch(Exception ex)
+                    Name = model.Name,
+                    Employee = _repository.GetEmployee(model.EmployeeFullName),
+                    Description = model.Description,
+                    Subject = model.Subject,
+                    Type = model.Type,
+                    Materials = medias,
+
+                    Mark = model.Mark ?? throw new ArgumentNullException(),
+                    Semester = model.Semester ?? throw new ArgumentNullException(),
+                    Work = model.Work ?? throw new ArgumentNullException(),
+                    Year = model.Year ?? throw new ArgumentNullException()
+                };
+                _repository.CreateLaboratoryJournal(lj);
+
+                string patrialPath = "Content/EducationalMaterials/" + String.Format("{0}_{1}",
+                    DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss"), model.Name.Transliterate());
+                string path = Path.Combine(_webHost.WebRootPath, patrialPath);
+                Directory.CreateDirectory(path);
+                for (int i = 0; i < uploads.Count; i++)
                 {
-                    ModelState.AddModelError("FullName", ex.Message);
-                    
-                }
-                
-                foreach (var file in uploads)
-                {
-                    string patrialPath = "EducationalMaterials/" + model.Name.Transliterate();
-                    string path = Path.Combine(_webHost.WebRootPath, patrialPath);
-                    
-                    using(var fileSteam = new FileStream(path,FileMode.Create))
+                    var file = uploads[i];
+                    string fileName= (i + 1).ToString()+"."+file.FileName.Split('.').Last();
+                    using (var fileSteam = new FileStream(Path.Combine(path, fileName), FileMode.Create))
                     {
                         await file.CopyToAsync(fileSteam);
                     }
-
-                    medias.Add(new Media(null,employee,
-                        file.FileName,patrialPath,await _userManager.GetUserAsync(null)));
+                    medias.Add(new Media(lj,
+                    fileName, file.ContentType, patrialPath, await _userManager.GetUserAsync(User)));
                 }
-                
+
+                foreach (var media in medias)
+                    media.EducationalMaterial = lj;
+                _repository.CreateMediaRange(medias);
+                _repository.SaveChanges();
+
+                return RedirectToAction("GetMaterials", "EducationalMaterials");
             }
-            else
-                ModelState.AddModelError("Files", "Не загржен ни один файл");
-            
-            if(ModelState.IsValid)
+            ViewBag.Types = Types;
+            return View("AddMaterial", model);
+        }
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddMaterial(EducationalMaterialViewModel model, IFormFileCollection uploads)
+        {
+            try
             {
-                
-                if(model.Type==EducationMaterialType.LaboratoryJournal)
-                {
-                    LaboratoryJournal lj = new LaboratoryJournal()
-                    {
-                        Name = model.Name,
-                        Employee = _repository.GetEmployee(model.EmploeeFullName),                    
-                        Description=model.Description,
-                        Subject=model.Subject,
-                        Type=model.Type,
-                        Materials=medias,
+                Employee employee = _repository.GetEmployee(model.EmployeeFullName);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("FullName", ex.Message);
 
-                        Mark = model.Mark ?? throw new Exception("Wrong model"),
-                        Semester = model.Semester ?? throw new Exception("Wrong model"),
-                        Work = model.Work,
-                        Year = model.Year ?? throw new Exception("Wrong model")
-                    };
-                    _repository.CreateLaboratoryJournal(lj);
-                    foreach (var media in medias)
-                        media.EducationalMaterial = lj;
-                    _repository.CreateMediaRange(medias);
-                    _repository.SaveChanges();
-                }
-                else
+            }
+            if (uploads.Count <= 0) ModelState.AddModelError("Files", "Не загржен ни один файл");
+
+            List<Media> medias = new List<Media>();
+
+
+            if (ModelState.IsValid)
+            {
+
+
+                EducationalMaterial em = new EducationalMaterial()
                 {
-                    EducationalMaterial em = new EducationalMaterial()
+                    Name = model.Name,
+                    Employee = _repository.GetEmployee(model.EmployeeFullName),
+                    Description = model.Description,
+                    Subject = model.Subject,
+                    Type = model.Type,
+                    Materials = medias
+                };
+                _repository.CreateEducationalMaterial(em);
+
+
+                string patrialPath = "Content/EducationalMaterials/" + String.Format("{0}_{1}",
+                    DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss"), model.Name.Transliterate());
+                string path = Path.Combine(_webHost.WebRootPath, patrialPath);
+                Directory.CreateDirectory(path);
+                foreach (var file in uploads)
+                {
+
+                    using (var fileSteam = new FileStream(Path.Combine(path, file.FileName), FileMode.Create))
                     {
-                        Name = model.Name,
-                        Employee = _repository.GetEmployee(model.EmploeeFullName),
-                        Description = model.Description,
-                        Subject = model.Subject,
-                        Type = model.Type,
-                        Materials = medias
-                    };
-                    _repository.CreateEducationalMaterial(em);
-                    foreach (var media in medias)
-                        media.EducationalMaterial = em;                 
-                    _repository.CreateMediaRange(medias);
-                    _repository.SaveChanges();
+                        await file.CopyToAsync(fileSteam);
+
+                    }
+
+                    medias.Add(new Media(em,
+                    file.FileName, file.ContentType, patrialPath, await _userManager.GetUserAsync(User)));
+
                 }
+
+                foreach (var media in medias)
+                    media.EducationalMaterial = em;
+                _repository.CreateMediaRange(medias);
+                _repository.SaveChanges();
 
                 return RedirectToAction("GetMaterials", "EducationalMaterials");
             }

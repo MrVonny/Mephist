@@ -30,7 +30,7 @@
     </td>
     <td>@Model.Department</td>
     <td>
-        @foreach (var institute in Model.Subjects.Split(';'))
+        @foreach (var institute in (Model.Subjects ?? "").Split(';') )
         {
             <p>@institute</p>
         }

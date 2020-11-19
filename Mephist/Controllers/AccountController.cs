@@ -2,26 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mephist.Services;
 using Mephist.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Data.SqlClient;
 
 namespace Mephist.Controllers
 {
     
     public class AccountController : Controller
     {
+        private IUniversityRepository _repository;
+        private IWebHostEnvironment _webHost;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(IUniversityRepository repository, IWebHostEnvironment webHost, UserManager<User> userManager, SignInManager<User> signInManager)
         {
+            _repository = repository;
+            _webHost = webHost;
             _userManager = userManager;
             _signInManager = signInManager;
         }
 
-        
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
@@ -32,10 +38,28 @@ namespace Mephist.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+                   
             if (ModelState.IsValid)
             {
+                User user = null;
+                try
+                {
+                    user = _repository.GetUserByEmail(model.Email);
+                }
+                catch(InvalidOperationException _)
+                {
+                    ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                }              
+                catch(Exception _)
+                {
+                    return StatusCode(500);
+                }
+                
+                if (!ModelState.IsValid)
+                    return View(model);
+
                 var result =
-                    await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                    await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
                     // проверяем, принадлежит ли URL приложению
