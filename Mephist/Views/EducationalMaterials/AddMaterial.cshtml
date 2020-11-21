@@ -5,64 +5,62 @@
 
 <h1>Добавление материала</h1>
 <form method="post" id="add-material-form" asp-controller="EducationalMaterials" asp-action="AddMaterial" enctype="multipart/form-data">
-    <div asp-validation-summary="All"></div>
-    <div>
-        <label asp-for="Name"></label><br />
-        <input asp-for="Name" />
+    <div asp-validation-summary="All" class="form-group"></div>
+    <div class="form-group mb-3">
+        <label asp-for="Name"></label>
+        <input class="form-control" asp-for="Name" />
         <span asp-validation-for="Name"></span>
     </div>
-    <div>
-        <label asp-for="Description"></label><br />
-        <input asp-for="Description" />
+    <div class="form-group mb-3">
+        <label asp-for="Description"></label>
+        <textarea class="form-control" style="min-height: 5em" asp-for="Description"></textarea>
         <span asp-validation-for="Description"></span>
     </div>
-    <div>
-        <label asp-for="EmployeeFullName"></label><br />
-        <input asp-for="EmployeeFullName" />
+    <div class="form-group mb-3">
+        <label asp-for="EmployeeFullName"></label>
+        <input class="form-control" asp-for="EmployeeFullName" />
         <span asp-validation-for="EmployeeFullName"></span>
     </div>
-    <div>
-        <label asp-for="Subject"></label><br />
-        <input asp-for="Subject" />
+    <div class="form-group mb-3">
+        <label asp-for="Subject"></label>
+        <input class="form-control" asp-for="Subject" />
         <span asp-validation-for="Subject"></span>
     </div>
-    <div>
-        <label asp-for="Type"></label><br />
-        <select id="typeInput" asp-for="Type" asp-items="ViewBag.Types">
+    <div class="form-group mb-3">
+        <label asp-for="Type"></label>
+        <select class="form-control" id="typeInput" asp-for="Type" asp-items="ViewBag.Types">
             <option value="">Выберите тип</option>
         </select>
         <span asp-validation-for="Type"></span>
     </div>
 
-
     <div id="labJournalInput" style="display: none">
-        <div>
-            <label asp-for="Semester"></label><br />
-            <input asp-for="Semester" />
+        <div class="form-group mb-3">
+            <label asp-for="Semester"></label>
+            <input class="form-control" asp-for="Semester" />
             <span asp-validation-for="Semester"></span>
         </div>
-        <div>
-            <label asp-for="Work"></label><br />
-            <input asp-for="Work" />
+        <div class="form-group mb-3">
+            <label asp-for="Work"></label>
+            <input class="form-control" asp-for="Work" />
             <span asp-validation-for="Work"></span>
         </div>
-        <div>
-            <label asp-for="Year"></label><br />
-            <input asp-for="Year" />
+        <div class="form-group mb-3">
+            <label asp-for="Year"></label>
+            <input class="form-control" asp-for="Year" />
             <span asp-validation-for="Year"></span>
         </div>
-        <div>
-            <label asp-for="Mark"></label><br />
-            <input asp-for="Mark" />
+        <div class="form-group mb-3">
+            <label asp-for="Mark"></label>
+            <input class="form-control" asp-for="Mark" />
             <span asp-validation-for="Mark"></span>
         </div>
-        <input name="query" hidden id="query" type="text"/>
+        <input name="query" hidden id="query" type="text" />
 
     </div>
-
-    <div>
+    <div class="mb-3">
         <label id="uploads-label">Файлы</label>
-        <input id="uploads" accept="image/*" type="file" name="uploads" multiple />
+        <input class="form-control" id="uploads" accept="image/*" type="file" name="uploads" multiple />
     </div>
     <style>
         #uploads-preview {
@@ -72,15 +70,15 @@
             width: 600px;
         }
 
-        #uploads-preview li {
-            margin: 5px 5px 5px 0;
-            padding: 1px;
-            float: left;
-            width: 200px;
-            height: 300px;
-            font-size: 4em;
-            text-align: center;
-        }
+            #uploads-preview li {
+                margin: 5px 5px 5px 0;
+                padding: 1px;
+                float: left;
+                width: 200px;
+                height: 300px;
+                font-size: 4em;
+                text-align: center;
+            }
     </style>
     <ul id="uploads-preview">
     </ul>
