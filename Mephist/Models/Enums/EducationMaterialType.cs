@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Mephist
+namespace Mephist.Models.Enums
 {
     public enum EducationMaterialType
     {

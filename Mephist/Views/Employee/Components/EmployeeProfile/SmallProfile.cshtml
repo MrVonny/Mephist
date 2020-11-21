@@ -1,5 +1,5 @@
 ﻿@model Mephist.Models.Employee
-
+@using Mephist.Models.Enums
 @{
     ViewData["Title"] = "SmallProfile";
     float chScore = (float)Model.Rating.CharacterScore / Model.Rating.CharacterVotes;
@@ -23,48 +23,101 @@
 
     </td>
     <td>
-        @foreach (var institute in Model.Institutions.Split(';'))
+        @foreach (var institute in (Model.Institutions ?? "").Split(';'))
         {
-        <p>@institute</p>
+            <p>@institute</p>
         }
     </td>
     <td>@Model.Department</td>
     <td>
-        @foreach (var institute in (Model.Subjects ?? "").Split(';') )
+        @foreach (var institute in (Model.Subjects ?? "").Split(';'))
         {
             <p>@institute</p>
         }
     </td>
     <td>
+        <!--
+        <ul class="list-group list-group-flush">
         @if (exmasTicketsCount > 0)
         {
-            <a href="#">Билеты (@exmasTicketsCount)</a>
+            <li class="list-group-item"><a href="#">Билеты (@exmasTicketsCount)</a></li>
         }
         @if (homeworkCount > 0)
         {
-            <a href="#">ДЗ (@homeworkCount)</a>
+            <li class="list-group-item">
+                <a href="#">ДЗ (@homeworkCount)</a>
+            </li>
         }
         @if (labCount > 0)
         {
-            <a href="#">Лабараторные работы (@labCount)</a>
+            <li class="list-group-item"> <a href="#">Лабараторные работы (@labCount)</a></li>
         }
         @if (lecturesCount > 0)
         {
-            <a href="#">Лекции (@lecturesCount)</a>
+            <li class="list-group-item">
+                <a href="#">Лекции (@lecturesCount)</a>
+            </li>
         }
         @if (sprusCount > 0)
         {
-            <a href="#">Шпоры (@sprusCount)</a>
+            <li class="list-group-item">
+                <a href="#">Шпоры (@sprusCount)</a>
+            </li>
         }
         @if (termPapersCount > 0)
         {
-            <a href="#">Курсовые работы (@termPapersCount)</a>
+            <li class="list-group-item">
+                <a href="#">Курсовые работы (@termPapersCount)</a>
+            </li>
         }
         @if (otherCount > 0)
         {
-            <a href="#">Другое (@otherCount)</a>
+            <li class="list-group-item">
+                <a href="#">Другое (@otherCount)</a>
+            </li>
         }
-
+    </ul>
+    -->
+        <div class="row container">
+            @if (exmasTicketsCount > 0)
+            {
+                <div class="col-12 col-lg-6"><a href="#">Билеты (@exmasTicketsCount)</a></div>
+            }
+            @if (homeworkCount > 0)
+            {
+                <div class="col-12 col-lg-6">
+                    <a href="#">ДЗ (@homeworkCount)</a>
+                </div>
+            }
+            @if (labCount > 0)
+            {
+                <div class="col-12 col-lg-6"> <a href="#">Лабараторные работы (@labCount)</a></div>
+            }
+            @if (lecturesCount > 0)
+            {
+                <div class="col-12 col-lg-6">
+                    <a href="#">Лекции (@lecturesCount)</a>
+                </div>
+            }
+            @if (sprusCount > 0)
+            {
+                <div class="col-12 col-lg-6">
+                    <a href="#">Шпоры (@sprusCount)</a>
+                </div>
+            }
+            @if (termPapersCount > 0)
+            {
+                <div class="col-12 col-lg-6">
+                    <a href="#">Курсовые работы (@termPapersCount)</a>
+                </div>
+            }
+            @if (otherCount > 0)
+            {
+                <div class="col-12 col-lg-6">
+                    <a href="#">Другое (@otherCount)</a>
+                </div>
+            }
+        </div>
     </td>
     <td>
         Характер: @chScore
@@ -73,6 +126,6 @@
         <br />
         Качество преподавания: @teachScore
 
-    <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.Id">Читать отзывы</a>
+        <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.Id">Читать отзывы</a>
     </td>
 </tr>

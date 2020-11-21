@@ -30,11 +30,14 @@ namespace Mephist.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Index()
+        
+        public IActionResult Index(int page = 1, int onPage=3)
         {
+
             List<Employee> employees = new List<Employee>(_repository.GetEmployees());
-            ViewBag.EmployeesList = employees;
-            
+            ViewBag.EmployeesList = employees.Skip((page-1)*onPage).Take(onPage);
+            ViewBag.MaxPage = (employees.Count - 1) / onPage + 1;
+            ViewBag.Page = page>ViewBag.MaxPage ? ViewBag.MaxPage : page;
 
             return View();
         }

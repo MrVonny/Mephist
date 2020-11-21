@@ -46,11 +46,11 @@ namespace Mephist.Controllers
                 {
                     user = _repository.GetUserByEmail(model.Email);
                 }
-                catch(InvalidOperationException _)
+                catch(InvalidOperationException)
                 {
                     ModelState.AddModelError("", "Неправильный логин и (или) пароль");
                 }              
-                catch(Exception _)
+                catch(Exception)
                 {
                     return StatusCode(500);
                 }

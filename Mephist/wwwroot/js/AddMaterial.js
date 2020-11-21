@@ -19,13 +19,13 @@
             $("#labJournalInput").show();
             $("#Name").prop('disabled', true);
             $("#Name").val("Лабораторная работа " + $("#Work").val());
-            $("form").prop('action', '/EducationalMaterials/AddLabJournal');
+            $("#add-material-form").prop('action', '/EducationalMaterials/AddLabJournal');
         }
         else {
             $("#labJournalInput").hide();
             $("#Name").prop('disabled', false);
             $("#Name").val(_name);
-            $("form").prop('action', '/EducationalMaterials/AddMaterial');
+            $("#add-material-form").prop('action', '/EducationalMaterials/AddMaterial');
         }
     }
 

@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Mephist.Models.LaboratoryJournal> 
+
+
+@{
+    ViewData["Title"] = "GetLabJournals";
+}
+
+<div class="container">
+    
+    <h1>Лабораторные работы по физике</h1>
+
+    @foreach (var semester in Model.Select(x=>x.Semester).Distinct().OrderBy(x=>x))
+    {
+        var modelsInSemester = Model.Where(x => x.Semester == semester);
+    <div class="container row">
+        <div class="col-12">
+            <h3>@semester семестр</h3>
+        </div>
+        @foreach (var workName in modelsInSemester
+            .Select(x => x.Name)
+            .Distinct()
+            .OrderBy(x => x)
+            .OrderBy(work=>
+            {
+                string strNum = new String(work.Where(c => char.IsDigit(c)).ToArray());
+                return Convert.ToInt32(strNum);
+            })
+             
+        )
+        {
+            var modelsWithCurWork = modelsInSemester.Where(x => x.Name.Equals(workName));
+        <div class="col-4 row mr-1">
+            <div class="col-12">
+                <h5>@workName</h5>
+            </div>
+            @foreach (var work in modelsWithCurWork)
+            {
+                <div class="border col-6">
+                    <h6>@work.Employee.FullName</h6>
+                    Оценка: @work.Mark <br />
+                    Год: @work.Year <br />
+                    <a asp-action="Download" asp-route-id="@work.Id">Скачать</a>
+                </div>
+            }
+        </div>
+        }
+    </div>
+    }
+</div>

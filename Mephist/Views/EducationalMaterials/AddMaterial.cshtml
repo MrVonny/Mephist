@@ -4,7 +4,7 @@
 }
 
 <h1>Добавление материала</h1>
-<form method="post"  asp-controller="EducationalMaterials" asp-action="AddMaterial" enctype="multipart/form-data">
+<form method="post" id="add-material-form" asp-controller="EducationalMaterials" asp-action="AddMaterial" enctype="multipart/form-data">
     <div asp-validation-summary="All"></div>
     <div>
         <label asp-for="Name"></label><br />

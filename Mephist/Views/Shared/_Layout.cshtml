@@ -12,20 +12,18 @@
     <link rel="stylesheet" href="~/css/style.css" />
     <link rel="stylesheet" href="~/css/jquery-ui.min.css" />
 </head>
-<body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+<body data-spy="scroll" data-target=".site-navbar-target" data-offset="0">
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light row">
-        <div class="col-6 col-md-3 col-xl-4  d-block">
-            <h1 class="mb-0 site-logo"><a href="index.html" class="text-black h2 mb-0">mephist</a></h1>
-        </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
-        <div class="col-6 col-md-3 col-xl-4 collapse navbar-collapse" id="navbarSupportedContent">
-
-            <ul class="navbar-nav mr-auto">
-                <li><a asp-controller="Employee" asp-action="Index" class="nav-link">Сотрудники</a></li>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="col-6 col-md-3 col-xl-4  d-block">
+                <h1 class="mb-0 site-logo"><a asp-action="Index" asp-controller="Home" class="text-black h2 mb-0">mephist</a></h1>
+            </div>
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item"><a asp-controller="Employee" asp-action="Index" class="nav-link">Сотрудники</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Учебные материалы
@@ -36,23 +34,27 @@
                     </div>
                 </li>
             </ul>
-        </div>
-        <div class="col-6 col-md-3 col-xl-4 float-right">
+
             @if (signInManager.IsSignedIn(User))
             {
-                <a class="col-12 col-md-6">@userManager.GetUserAsync(User).Result.UserName</a>
-                <form method="post" asp-controller="Account" asp-action="Logout">
-                    <input class="col-12 col-md-6" type="submit" value="Выйти" />
+
+                <form method="post" class="form-inline" asp-controller="Account" asp-action="Logout">
+                    <a class="my-auto">@userManager.GetUserAsync(User).Result.UserName</a>
+                    <input class="btn" type="submit" value="Выйти" />
                 </form>
             }
             else
             {
-                <a class="col-12 col-md-6" asp-controller="Account" asp-action="Login">Войти</a>
-                <a class="col-12 col-md-6" asp-controller="Account" asp-action="Register">Зарегистрироваться</a>
+                <div class="d-inline">
+                    <a class="mx-2" asp-controller="Account" asp-action="Login">Войти</a>
+                    <a class="mx-2" asp-controller="Account" asp-action="Register">Зарегистрироваться</a>
+                </div>
+
             }
+
         </div>
     </nav>
-    <div style="padding-top: 105px">
+    <div class="container">
         @RenderBody()
     </div>
 

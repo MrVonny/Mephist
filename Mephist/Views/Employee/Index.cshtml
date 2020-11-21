@@ -3,24 +3,35 @@
     ViewData["Title"] = "Index";
 }
 
+<div class="justify-content-center">
+    <h1 class="mx-auto my-2">Преподаватели и сотрудники НИЯУ МИФИ</h1>
+</div>
 
-    <table>
-        <thead>
-            <tr>
-                <td>ФИО</td>
-                <td>Инстиут</td>
-                <td>Кафедра</td>
-                <td>Предметы</td>
-                <td>Учебные материалы</td>
-                <td></td>
-            </tr>
-        </thead>
-        
-        <tbody>
-            @foreach (Employee employee in ViewBag.EmployeesList)
-            {
-                @await Component.InvokeAsync("EmployeeProfile", employee);
-            }
-        </tbody>
-     </table>
+<div class="md-form my-3" >
+    <input class="form-control" style=" font-size: 24px; height: 2em" type="text" placeholder="Поиск" />
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <td><b>ФИО</b></td>
+            <td><b>Инстиуты</b></td>
+            <td><b>Кафедра</b></td>
+            <td><b>Предметы</b></td>
+            <td><b>Учебные материалы</b></td>
+            <td><b>Отзывы</b></td>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (Employee employee in ViewBag.EmployeesList)
+        {
+            @await Component.InvokeAsync("EmployeeProfile", employee);
+        }
+    </tbody>
+</table>
+<div class="container justify-content-center" >
+    @await Component.InvokeAsync("PageNavigation", new { action = "Index", controller = "Employee", page = ViewBag.Page, maxPage = ViewBag.MaxPage })
+</div>
+
+
 
