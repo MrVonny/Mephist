@@ -1,0 +1,72 @@
+﻿@model Mephist.Models.LaboratoryJournal
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="row container my-4">
+    <div class="col-12 col-md-4">
+        <h3>@Model.Name</h3>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><span>Преподаватель: <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.EmployeeId">@Model.Employee.FullName</a></span></li>
+            <li class="list-group-item"><span>Оценка: @Model.Mark</span></li>
+            <li class="list-group-item"> <span>Год: @Model.Year</span></li>
+        </ul>
+        
+        
+       
+    </div>
+    <div class="col-12 col-md-8">
+        <div id="carouselExampleIndicators" class="carousel carousel-dark slide" data-ride="carousel" >
+            <ol class="carousel-indicators">
+                @{var images = Model.Materials.OrderBy(x => x.MediaName).ToArray(); }
+                @for (int i = 0; i < images.Length; i++)
+                {
+                    if (i == 0)
+                    {
+                        <li data-target="#carouselExampleIndicators" data-slide-to="@i" class="active"></li>
+                    }
+                    else
+                    {
+                        <li data-target="#carouselExampleIndicators" data-slide-to="@i"></li>
+                    }
+                }
+            </ol>
+
+            <div class="carousel-inner" style="max-height: none;">
+                <style>
+                    .img-lab{
+                        max-height:928px;
+                        width: 100%;
+                    }
+                </style>
+                @for (int i = 0; i < images.Length; i++)
+                {
+                    if (i == 0)
+                    {
+                        <div class="carousel-item active" data-interval="false">
+                            <img src="~/@images[i].GetPath()" class="img-fluid img-lab" alt="img">
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="carousel-item" data-interval="false">
+                            <img src="~/@images[i].GetPath()" class="img-fluid img-lab" alt="img">
+                        </div>
+                    }
+                }
+
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </a>
+        </div>
+    </div>
+
+
+</div>

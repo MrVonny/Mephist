@@ -31,7 +31,7 @@ namespace Mephist.Controllers
         }
 
         
-        public IActionResult Index(int page = 1, int onPage=3)
+        public IActionResult Index(string search, int page = 1, int onPage=3)
         {
 
             List<Employee> employees = new List<Employee>(_repository.GetEmployees());

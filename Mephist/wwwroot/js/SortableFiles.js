@@ -61,11 +61,12 @@
                                     if (file.type.match('image')) {
                                         // Image
 
-                                        $('<li class="ui-state-default" id="sortable-item' + i + '"></li>').appendTo($(settings.preview_box));
+                                        $('<div class="file-sortable ui-state-default col-6 col-md-4 col-lg-2 m-1" id="sortable-item' + i + '">' +                                                         
+                                                    '<img src="' + loadedFile.result + '" class="img-thumbnail"/>' +
+                                                    '<span class="thumb-name">' + files[i].name + '</span>' +                          
+                                          '</div>'
+                                        ).appendTo($(settings.preview_box));
 
-                                        $("#sortable-item" + i).css("background-image", "url(" + loadedFile.result + ")");
-                                        $("#sortable-item" + i).css("background-size", "cover");
-                                        $("#sortable-item" + i).css("background-position", "center center");
                                     } else if (file.type.match('audio')) {
                                         // Audio
                                         $(settings.preview_box).html("<audio controls><source src='" + loadedFile.result + "' type='" + file.type + "' />Your browser does not support the audio element.</audio>");

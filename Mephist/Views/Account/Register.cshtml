@@ -1,29 +1,29 @@
 ﻿@model Mephist.ViewModels.RegisterViewModel
 
 <h2>Регистрация нового пользователя</h2>
-<form method="post" asp-controller="Account" asp-action="Register">
+<form class="w-25" method="post" asp-controller="Account" asp-action="Register">
     <div asp-validation-summary="ModelOnly"></div>
-    <div>
+    <div class="form-group">
         <label asp-for="UserName"></label><br />
-        <input asp-for="UserName" />
+        <input class="form-control" asp-for="UserName" />
         <span asp-validation-for="UserName"></span>
     </div>
-    <div>
+    <div class="form-group">
         <label asp-for="Email"></label><br />
-        <input asp-for="Email" />
+        <input class="form-control" asp-for="Email" />
         <span asp-validation-for="Email"></span>
     </div>
-    <div>
+    <div class="form-group">
         <label asp-for="Password"></label><br />
-        <input asp-for="Password" />
+        <input class="form-control" asp-for="Password" />
         <span asp-validation-for="Password"></span>
     </div>
-    <div>
+    <div class="form-group">
         <label asp-for="PasswordConfirm"></label><br />
-        <input asp-for="PasswordConfirm" />
+        <input class="form-control" asp-for="PasswordConfirm" />
         <span asp-validation-for="PasswordConfirm"></span>
     </div>
-    <div>
-        <input type="submit" value="Регистрация" />
+    <div class="my-3">
+        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
     </div>
 </form>

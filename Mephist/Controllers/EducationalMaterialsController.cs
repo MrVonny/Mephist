@@ -101,6 +101,16 @@ namespace Mephist.Controllers
             ViewBag.Types = Types;
             return View();
 
-        }      
+        }
+
+        public IActionResult Details(int? id)
+        {
+            if (id is null)
+                return StatusCode(400);
+
+            LaboratoryJournal lj = _repository.GetLaboratoryJournal(id);
+
+            return View(lj);
+        }
     }
 }

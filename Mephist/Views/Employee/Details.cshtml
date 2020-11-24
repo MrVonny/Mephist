@@ -21,7 +21,7 @@
             <tr>
                 <td>Преподаёт предметы:</td>
                 <td>
-                    @foreach (var subject in Model.Subjects.Split(';'))
+                    @if (Model.Subjects != null) foreach (var subject in Model.Subjects.Split(';'))
                     {
                         <a href="#">@subject</a>
                     }

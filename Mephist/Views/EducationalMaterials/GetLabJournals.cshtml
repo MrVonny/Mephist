@@ -39,6 +39,7 @@
                     <h6>@work.Employee.FullName</h6>
                     Оценка: @work.Mark <br />
                     Год: @work.Year <br />
+                    <a asp-action="Details" asp-route-id="@work.Id">Смотреть</a>
                     <a asp-action="Download" asp-route-id="@work.Id">Скачать</a>
                 </div>
             }
