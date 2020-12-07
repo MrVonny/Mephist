@@ -21,17 +21,10 @@ namespace Mephist.Models
         [StringLength(50)]
         [Column(TypeName = "nvarchar(50)")]
         public string FullName { get; set; }
-        //[Institute]
-        [Column(TypeName = "nvarchar(50)")]
-        public string Institutions { get; set; } = "";
-        //[Department]
-        [Column(TypeName = "nvarchar(50)")]
-        public string Department { get; set; } = "";
+        public virtual IEnumerable<Department> Departments { get; set; }
         [Column(TypeName = "nvarchar(150)")]
-        //[Subject]
         public string Subjects { get; set; } = "";
         public virtual List<EducationalMaterial> EducationalMaterials { get; set; } = new List<EducationalMaterial>();
-        //[Reviews]
         public virtual List<Review> Reviews { get; set; } = new List<Review>();
         //public int? PhotoAvatarId { get; set; }
         //public virtual Media PhotoAvatar { get; set; }

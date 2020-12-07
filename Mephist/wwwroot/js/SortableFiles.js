@@ -14,9 +14,9 @@
     function CreateQuery(event, ui) {
         var list = [];
         $("#uploads-preview").children().each(function (index) {
-            var id = $(this).attr('id');
-            if (id != undefined)
-                list.push(id.slice("sortable-item".length));
+            var fileName = $(this).find(".thumb-name").text();
+            if (fileName != undefined)
+                list.push(fileName);
         });
 
         console.log(list);

@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using FuzzySharp;
+using System.Diagnostics;
 
 namespace Mephist.Controllers
 {
@@ -31,10 +33,16 @@ namespace Mephist.Controllers
         }
 
         
-        public IActionResult Index(string search, int page = 1, int onPage=3)
+        public IActionResult Index(string search, int page = 1, int onPage=10)
         {
+            List<Employee> employees;
+            if (search==null)
+                employees = _repository.GetEmployees().ToList();
+            else
+                employees = _repository.GetEmployeesFuzzy(search,Fuzz.PartialRatio).ToList();
 
-            List<Employee> employees = new List<Employee>(_repository.GetEmployees());
+            
+            
             ViewBag.EmployeesList = employees.Skip((page-1)*onPage).Take(onPage);
             ViewBag.MaxPage = (employees.Count - 1) / onPage + 1;
             ViewBag.Page = page>ViewBag.MaxPage ? ViewBag.MaxPage : page;

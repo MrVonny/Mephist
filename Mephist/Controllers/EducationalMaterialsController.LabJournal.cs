@@ -78,9 +78,11 @@ namespace Mephist.Controllers
                     DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss"), model.Name.Transliterate());
                 string path = Path.Combine(_webHost.WebRootPath, patrialPath);
                 Directory.CreateDirectory(path);
-                for (int i = 0; i < uploads.Count; i++)
+                var fileNames = query.Split(',');
+                for (int i = 0; i < fileNames.Length; i++)
                 {
-                    var file = uploads[i];
+                    var uploadfileName = fileNames[i];
+                    var file = uploads.Single(x=>x.FileName==uploadfileName);
                     string fileName= (i + 1).ToString()+"."+file.FileName.Split('.').Last();
                     using (var fileSteam = new FileStream(Path.Combine(path, fileName), FileMode.Create))
                     {

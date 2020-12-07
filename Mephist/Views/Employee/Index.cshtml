@@ -7,10 +7,10 @@
     <h1 class="mx-auto my-2">Преподаватели и сотрудники НИЯУ МИФИ</h1>
 </div>
 
-<form>
+<form method="get" asp-action="Index">
     <div class="input-group mb-2" style="font-size: 28px; height: 1.5em;">
         <button class="btn btn-outline-primary" type="submit">Найти</button>
-        <input type="text" class="form-control" aria-describedby="button-addon1">
+        <input type="text" class="form-control" name="search">
     </div>
 </form>
 <table class="table">

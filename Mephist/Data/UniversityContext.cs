@@ -27,6 +27,8 @@ namespace Mephist.Data
             base.OnModelCreating(modelBuilder);
             
         }
+        public DbSet<Institute> Institutions { get; set; }
+        public DbSet<Department> Departments { get; set; }
         public DbSet<EducationalMaterial> EducationalMaterials { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Media> Medias { get; set; }

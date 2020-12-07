@@ -2,9 +2,13 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/Mephist",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "http://localhost:53258",
-      "sslPort": 44369
+      "sslPort": 0
     }
   },
   "profiles": {
@@ -28,7 +32,7 @@
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "publishAllPorts": true,
-      "useSSL": true
+      "useSSL": false
     }
   }
 }

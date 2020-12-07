@@ -5,13 +5,13 @@
     float chScore = (float)Model.Rating.CharacterScore / Model.Rating.CharacterVotes;
     float exScore = (float)Model.Rating.ExamsScore / Model.Rating.ExamsVotes;
     float teachScore = (float)Model.Rating.TeachingScore / Model.Rating.TeachingVotes;
-    int exmasTicketsCount = Model.EducationalMaterials.Where(em => em.Type == EducationMaterialType.ExamTickets).Count();
-    int homeworkCount = Model.EducationalMaterials.Where(em => em.Type == EducationMaterialType.Homework).Count();
-    int labCount = Model.EducationalMaterials.Where(em => em.Type == EducationMaterialType.LaboratoryJournal).Count();
-    int lecturesCount = Model.EducationalMaterials.Where(em => em.Type == EducationMaterialType.Lectures).Count();
-    int sprusCount = Model.EducationalMaterials.Where(em => em.Type == EducationMaterialType.Spurs).Count();
-    int termPapersCount = Model.EducationalMaterials.Where(em => em.Type == EducationMaterialType.TermPaper).Count();
-    int otherCount = Model.EducationalMaterials.Where(em => em.Type == EducationMaterialType.Other).Count();
+    int exmasTicketsCount = Model.EducationalMaterials.Where(em => em.Type == EducationalMaterialType.ExamTickets).Count();
+    int homeworkCount = Model.EducationalMaterials.Where(em => em.Type == EducationalMaterialType.Homework).Count();
+    int labCount = Model.EducationalMaterials.Where(em => em.Type == EducationalMaterialType.LaboratoryJournal).Count();
+    int lecturesCount = Model.EducationalMaterials.Where(em => em.Type == EducationalMaterialType.Lectures).Count();
+    int sprusCount = Model.EducationalMaterials.Where(em => em.Type == EducationalMaterialType.CheatSheets).Count();
+    int termPapersCount = Model.EducationalMaterials.Where(em => em.Type == EducationalMaterialType.TermPaper).Count();
+    int otherCount = Model.EducationalMaterials.Where(em => em.Type == EducationalMaterialType.Other).Count();
 
 }
 
@@ -23,12 +23,12 @@
 
     </td>
     <td>
-        @foreach (var institute in (Model.Institutions ?? "").Split(';'))
+        @foreach (var institute in Model.Departments.Select(x=>x.Institute.Name).Distinct())
         {
             <p>@institute</p>
         }
     </td>
-    <td>@Model.Department</td>
+    <td></td>
     <td>
         @foreach (var institute in (Model.Subjects ?? "").Split(';'))
         {

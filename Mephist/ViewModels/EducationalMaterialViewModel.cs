@@ -10,25 +10,25 @@ namespace Mephist.ViewModels
 {
     public class EducationalMaterialViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Введите ФИО преподавателя")]
         [Display(Name="Преподаватель")]
         public string EmployeeFullName { get; set; }
 
         [Display(Name = "Название")]
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage ="Введите название")]
+        [StringLength(50, ErrorMessage = "Не более 50 сиволов")]
         public string Name { get; set; }
             
         [Display(Name = "Описание")]
-        [StringLength(4000)]
+        [StringLength(4000, ErrorMessage = "Не более 4000 символов")]
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Выберите предмет")]
         [Display(Name = "Предмет")]
         public string Subject { get; set; }
         [Required]
         [Display(Name = "Тип")]
-        public EducationMaterialType Type { get; set; }
+        public EducationalMaterialType Type { get; set; }
         [Display(Name = "Номер работы")]    
         public virtual string Work { get; set; }
         [Range(1, 4)]

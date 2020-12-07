@@ -9,15 +9,18 @@ namespace Mephist.Services
 {
     public interface IUniversityRepository
     {
-        //TODO: IEnumerable to IQueryable      
+        //TODO: IEnumerable and IQueryable      
+        //Статическая инфа
+        
 
-        //Read
+
+
+
         IEnumerable<Employee> GetEmployees();
+        IEnumerable<Employee> GetEmployeesFuzzy(string fullName, Func<string, string, int> compareFunc, int similarity=50);
         Employee GetEmployee(string fullName);
         Employee GetEmployee(int? id);
-        //Create
         void CreateEmployee(Employee employee);
-        //Delete
         void DeleteEmployee(Employee employee);
         void DeleteEmployee(int? id);
         void DeleteEmployee(string fullname);
@@ -30,6 +33,7 @@ namespace Mephist.Services
         void DeleteLaboratoryJournal(LaboratoryJournal labJournal);
 
         IEnumerable<EducationalMaterial> GetEducationalMaterials();
+        IEnumerable<EducationalMaterial> GetEducationalMaterialsFuzzy(string name, Func<string, string, int> compareFunc, int similarity = 50);
         EducationalMaterial GetEducationalMaterial(int? id);
         void CreateEducationalMaterial(EducationalMaterial educationalMaterial);
         void DeleteEducationalMaterial(EducationalMaterial educationalMaterial);

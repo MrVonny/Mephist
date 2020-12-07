@@ -106,6 +106,15 @@ namespace Mephist.Services
             return _context.EducationalMaterials.ToList();
         }
 
+        public IEnumerable<EducationalMaterial> GetEducationalMaterialsFuzzy(string name, Func<string, string, int> compareFunc, int similarity = 50)
+        {
+            var materials = _context.EducationalMaterials.ToList()
+                .Select(x => new { sim = compareFunc(x.Name, name), Name = x })
+                .OrderBy(x => -1 * x.sim)
+                .Where(x => x.sim > similarity)
+                .Select(x => x.Name);
+            return materials;
+        }
         public EducationalMaterial GetEducationalMaterial(int? id)
         {
             return _context.EducationalMaterials.Single(x => x.Id == id);
@@ -163,6 +172,18 @@ namespace Mephist.Services
         public IEnumerable<Employee> GetEmployees()
         {
             return _context.Employees.ToList();
+        }
+
+        public IEnumerable<Employee> GetEmployeesFuzzy(string fullName, Func<string, string, int> compareFunc, int similarity = 50)
+        {
+
+            var employees = _context.Employees.ToList()
+                .Select(x => new { sim =compareFunc(x.FullName, fullName), Employee = x })
+                .OrderBy(x => -1*x.sim)
+                .Where(x => x.sim > similarity)
+                .Select(x => x.Employee);
+            return employees;
+
         }
         public Employee GetEmployee(string fullName)
         {
@@ -336,5 +357,7 @@ namespace Mephist.Services
         {
             _context.SaveChanges();
         }
+
+        
     }
 }

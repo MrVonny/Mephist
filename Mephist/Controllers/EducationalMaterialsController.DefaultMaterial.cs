@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Runtime;
 using System.Threading.Tasks;
+using FuzzySharp;
 using Mephist.Data;
 using Mephist.Extensions;
 using Mephist.Models;
@@ -24,15 +25,41 @@ namespace Mephist.Controllers
 {
     public partial class EducationalMaterialsController : Controller
     {
-        public IActionResult GetMaterials(EducationMaterialType[] types, string[] employees)
+        public IActionResult GetMaterials(string name, string employee, string lectures, string homeworks, string cheatsSheats, string labs, string tickets, string courseworks, string others)
         {
-            IEnumerable<EducationalMaterial> educationalMaterials = _repository.GetEducationalMaterials();
-            if (types.Length > 0)
-                educationalMaterials = educationalMaterials.Where(em => types.Contains(em.Type));
-            if (employees.Length > 0)
-                educationalMaterials = educationalMaterials.Where(em => employees.Contains(em.Employee.FullName));
-            List<EducationalMaterial> list = educationalMaterials.ToList();
-            ViewBag.EducationalMaterialsList = list;
+            List<EducationalMaterialType> types = new List<EducationalMaterialType>();
+            
+            if (!String.IsNullOrEmpty(lectures))
+                types.Add(EducationalMaterialType.Lectures);
+            if (!String.IsNullOrEmpty(homeworks))
+                types.Add(EducationalMaterialType.Homework);
+            if (!String.IsNullOrEmpty(cheatsSheats))
+                types.Add(EducationalMaterialType.CheatSheets);
+            if (!String.IsNullOrEmpty(labs))
+                types.Add(EducationalMaterialType.LaboratoryJournal);
+            if (!String.IsNullOrEmpty(tickets))
+                types.Add(EducationalMaterialType.ExamTickets);
+            if (!String.IsNullOrEmpty(courseworks))
+                types.Add(EducationalMaterialType.TermPaper);
+            if (!String.IsNullOrEmpty(others))
+                types.Add(EducationalMaterialType.Other);
+            
+
+            IQueryable<EducationalMaterial> list = _repository.GetEducationalMaterials().AsQueryable();
+            if(types.Count>0)
+                list = list.Where(em => types.Contains(em.Type));
+            if (!String.IsNullOrEmpty(employee))
+            {
+                var employees = _repository.GetEmployeesFuzzy(employee, Fuzz.PartialRatio);
+                list = list.Where(em => employees.Contains(em.Employee));
+            }
+            if (!String.IsNullOrEmpty(name))
+            {
+                var materials = _repository.GetEducationalMaterialsFuzzy(name, Fuzz.PartialRatio);
+                list = list.Where(em=>materials.Contains(em));
+            }
+
+            ViewBag.EducationalMaterialsList = list.ToList();
             return View();
         }
 

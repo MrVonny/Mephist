@@ -1,12 +1,37 @@
 ﻿@model Mephist.ViewModels.ReviewViewModel
+@inject Microsoft.AspNetCore.Identity.SignInManager<User> signInManager
 
+<div class="container row">
+    <h2>Написать отзыв</h2>
+    <form method="post" asp-action="AddReview" asp-controller="Employee">
+        <input hidden asp-for="EmployeeId" value="@Model.EmployeeId" />
+        <div asp-validation-summary="All"></div>
 
-
-<form method="post" asp-action="AddReview" asp-controller="Employee">
-    <div asp-validation-summary="All"></div>
-    <input hidden asp-for="EmployeeId" value="@Model.EmployeeId" />
-    <textarea type="text" asp-for="Text"></textarea><br />
-    <input type="checkbox" asp-for="Anonymously" />
-    <label>Анонимно</label>
-    <input type="submit" value="Оставить отзыв" />
-</form>
+        <div class="mb-3">
+            <textarea class="form-control w-75" rows="3" asp-for="Text"></textarea>
+        </div>
+        <div class="mb-3 form-check">
+            @if (signInManager.IsSignedIn(User))
+            {
+                <input asp-for="Anonymously" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="flexCheckChecked">
+                    Аноноимно
+                </label>
+            }
+            else
+            {
+                <span data-toggle="tooltip" data-placement="top" title="Войдите, чтобы оставить неанонимный отзыв">
+                    <input class="form-check-input" type="checkbox" checked disabled>
+                    <input asp-for="Anonymously" class="form-check-input" type="checkbox" checked hidden>
+                    <label class="form-check-label">
+                        Анонимно
+                    </label>
+                </span>
+            }
+        </div>
+        <div >
+            <input class="btn btn-primary" type="submit" value="Отправить" />
+        </div>
+        
+    </form>
+</div>

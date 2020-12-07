@@ -38,7 +38,7 @@ namespace Mephist
 
             services.AddTransient<IUniversityRepository, UniversityRepository>();
             services.AddDbContext<UniversityContext>(options =>
-                    options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("PCMSSQLSERVER")));
+                    options.UseLazyLoadingProxies().UseSqlite(Configuration.GetConnectionString("SQlite")));
 
             services.Configure<IdentityOptions>(option =>
             {
@@ -68,11 +68,11 @@ namespace Mephist
             {
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                //app.UseHsts();
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
-            //app.UseDefaultFiles();
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseRouting();
