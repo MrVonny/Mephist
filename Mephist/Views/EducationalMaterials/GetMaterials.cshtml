@@ -91,6 +91,16 @@
                     </td>
                     <td>@em.Employee.FullName</td>
                     <td>@em.Description</td>
+                    @if (User.IsInRole("admin"))
+                    {
+                        <td>
+                            <form method="post" asp-controller="EducationalMaterials" asp-action="Delete">
+                                <input type="hidden" value="@em.Id" name="id"/>
+                                <input type="hidden" value="" name="returnUrl" />
+                                <button class="btn-danger btn" type="submit">Удалить</button>
+                            </form>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>

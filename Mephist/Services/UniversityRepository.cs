@@ -1,102 +1,42 @@
 ﻿using Mephist.Data;
 using Mephist.Extensions;
 using Mephist.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using DuoVia;
+using DuoVia.FuzzyStrings;
 
 namespace Mephist.Services
 {
     public class UniversityRepository : IUniversityRepository
     {
-        private UniversityContext _context;
-        public UniversityRepository(UniversityContext context)
+        private readonly UniversityContext _context;
+        //UserManager<User> _userManager;
+        //RoleManager<IdentityRole> _roleManager;
+        public UniversityRepository(UniversityContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
-
-
             _context = context;
-            /*
-            Employee samedov = new Employee()
-            {              
-                FullName = "Самедов Виктор Витальевич",
-                Department = "40",
-                Institutions = "ИЯФиТ;ИИКС",
-                Subjects = "Предмет 1;Предмет 2"
-
-            };
-
-            _context.Employees.Add(samedov);
-            SaveChanges();
             
-            _context.Employees.Add(samedov);
-            _context.SaveChanges();
-            User user1 = new User()
+            string adminEmail = "borafon@gmail.com";
+            string password = "MrBen228";
+            if (roleManager.FindByNameAsync("admin").Result == null)
             {
+                 roleManager.CreateAsync(new IdentityRole("admin"));
+            }
+            if ( userManager.FindByEmailAsync(adminEmail).Result == null)
+            {
+                User admin = new User { Email = adminEmail, UserName = "Admin" };
                 
-                NickName = "MEPhI Killer"
-            };
-
-            _context.Users.Add(user1);
-            _context.SaveChanges();
-
-            Media mediaSamedov = new Media()
-            {
-                
-                PartialMediaPath = Path.Combine(@"\Employees\",
-                                   String.Concat("Самедов Виктор Витальевич".Transliterate().Split(' '))),
-                MediaName = "1131_cps.jpg",
-                EmployeeId = 1
-            };
-            _context.Medias.Add(mediaSamedov);
-            _context.SaveChanges();
-            EducationalMaterial em1 = new EducationalMaterial
-            {
-
-                Type = EducationMaterialType.ExamTickets,
-                Name = "Билеты за 3 14888 год",
-                Employee = samedov
-            };
-            _context.Add(em1);
-            _context.SaveChanges();
-
-            Media mediaBilets = new Media()
-            {
-                CreatedDate = DateTime.Now,
-                PartialMediaPath = @"\EducationMaterials\",
-                EducationalMaterial = em1
-
-            };
-            _context.Medias.Add(mediaBilets);
-            _context.SaveChanges();
-            Rating rating1 = new Rating()
-            {
-                CharacterScore = 5,
-                CharacterVotes = 4,
-                ExamsScore = -10,
-                ExamsVotes = 5,
-                TeachingScore = 28,
-                TeachingVotes = 15,
-                Employee= samedov
-
-            };
-            _context.Add(rating1);
-            _context.SaveChanges();
-            Review reviewSame = new Review()
-            {
-               
-                Anonymously = false,
-                User = user1,
-                Text = "АААААА ПРЕПОООООД ТОПППППППП 11/10",
-                CreatedDate = DateTime.Now,
-                Employee=samedov
-
-            };
-            _context.Add(reviewSame);
-            _context.SaveChanges();
-            */
-
+                IdentityResult result = userManager.CreateAsync(admin, password).Result;
+                if (result.Succeeded)
+                {
+                     userManager.AddToRoleAsync(admin, "admin");
+                }
+            }
         }
 
         #region EducationalMaterial
@@ -110,7 +50,7 @@ namespace Mephist.Services
         {
             var materials = _context.EducationalMaterials.ToList()
                 .Select(x => new { sim = compareFunc(x.Name, name), Name = x })
-                .OrderBy(x => -1 * x.sim)
+                .OrderByDescending(x => x.sim)
                 .Where(x => x.sim > similarity)
                 .Select(x => x.Name);
             return materials;
@@ -128,6 +68,7 @@ namespace Mephist.Services
 
         public void DeleteEducationalMaterial(EducationalMaterial educationalMaterial)
         {
+            educationalMaterial.Materials.RemoveAll(x => true);
             _context.EducationalMaterials.Remove(educationalMaterial);
         }
 
@@ -173,17 +114,15 @@ namespace Mephist.Services
         {
             return _context.Employees.ToList();
         }
-
-        public IEnumerable<Employee> GetEmployeesFuzzy(string fullName, Func<string, string, int> compareFunc, int similarity = 50)
+        public IEnumerable<Employee> GetEmployeesFuzzy(string fullName)
         {
-
+            fullName = fullName.Transliterate().ToLower();
             var employees = _context.Employees.ToList()
-                .Select(x => new { sim =compareFunc(x.FullName, fullName), Employee = x })
-                .OrderBy(x => -1*x.sim)
-                .Where(x => x.sim > similarity)
+                .Select(x => new { sim = FuzzySharp.Fuzz.PartialRatio(fullName, x.FullName.Transliterate().ToLower()), Employee = x })
+                .OrderByDescending(x => x.sim)
+                .Where(x => x.sim > 76)
                 .Select(x => x.Employee);
             return employees;
-
         }
         public Employee GetEmployee(string fullName)
         {
@@ -216,6 +155,31 @@ namespace Mephist.Services
             DeleteEmployee(GetEmployee(fullname));
         }
 
+        public bool ExistsEmployee(string fullname)
+        {
+            return _context.Employees.Any(em=>em.FullName.Equals(fullname));
+        }
+
+        public void UpdateEmployee(string fullName, Employee newEmployee)
+        {
+            Employee old = GetEmployee(fullName);
+
+            old.Departments = newEmployee.Departments;
+            old.Positions = newEmployee.Positions;
+            old.Subjects = newEmployee.Subjects;
+
+            if (newEmployee.Medias != null)
+                old.Medias.AddRange(newEmployee.Medias);
+            if (newEmployee.Reviews != null)
+                old.Reviews.AddRange(newEmployee.Reviews);
+            if (newEmployee.EducationalMaterials != null)
+                old.EducationalMaterials.AddRange(newEmployee.EducationalMaterials);
+        }
+
+        public void UpdateEmployee(int id, Employee newEmployee)
+        {
+
+        }
 
         #endregion
 
@@ -304,36 +268,6 @@ namespace Mephist.Services
 
         #endregion
 
-        #region Ratings
-
-        public IEnumerable<Rating> GetRating()
-        {
-            return _context.Ratings.ToList();
-        }
-
-        public Rating GetRating(int? id)
-        {
-            return _context.Ratings.Single(x => x.Id == id);
-        }
-
-        public void CreateRating(Rating rating)
-        {
-            _context.Ratings.Add(rating);
-        }
-
-
-        public void DeleteRating(int? id)
-        {
-            DeleteRating(GetRating(id));
-        }
-
-        public void DeleteRating(Rating rating)
-        {
-            _context.Ratings.Remove(rating);
-        }
-
-        #endregion
-
         #region User
         
         public User GetUserById(string id)
@@ -344,7 +278,7 @@ namespace Mephist.Services
         public User GetUserByEmail(string email)
         {
             return _context.Users.Single(x => email.ToUpper().Equals(x.NormalizedEmail));
-
+            
         }
 
         public User GetUserByUserName(string userName)

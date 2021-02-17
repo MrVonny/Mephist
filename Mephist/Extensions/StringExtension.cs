@@ -12,7 +12,7 @@ namespace Mephist.Extensions
     {
         public static string Transliterate(this string str)
         {
-
+            
             Dictionary<string, string> translitLetters  = new Dictionary<string, string>();
 
             #region Letters
@@ -85,7 +85,7 @@ namespace Mephist.Extensions
             #endregion
 
             StringBuilder builder = new StringBuilder();
-            foreach(var letter in str)
+            foreach(var letter in str ?? throw new ArgumentNullException())
             
                 if (translitLetters.ContainsKey(letter.ToString()))
                     builder.Append(translitLetters[letter.ToString()]);

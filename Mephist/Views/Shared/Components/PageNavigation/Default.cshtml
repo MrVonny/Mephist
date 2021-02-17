@@ -25,7 +25,9 @@
                 </a>
             </li>
         }
-        @for (int i = 1; i <= ViewBag.MaxPage; i++)
+        @for (int i = ViewBag.Page > 4 ? ViewBag.Page-4 : 1;
+            i <= (((ViewBag.Page + 4) < ViewBag.MaxPage) ? (ViewBag.Page + 4) : ViewBag.MaxPage);
+            i++)
         {
             if (i == ViewBag.Page)
             {

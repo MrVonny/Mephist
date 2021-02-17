@@ -29,7 +29,7 @@ namespace Mephist.Models
         [Required]
         public DateTime CreatedDate { get; set; }
 
-        public static string DefaultAvatarPath = @"Shared/DefaultAvatar.jpg";
+        public static readonly string DefaultAvatarPath = @"Shared/DefaultAvatar.jpg";
         
 
         public Media()

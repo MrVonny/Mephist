@@ -19,8 +19,8 @@ namespace Mephist.Controllers
     public class EmployeeController : Controller
     {
 
-        private IUniversityRepository _repository;
-        private IHostEnvironment _environment;
+        private readonly IUniversityRepository _repository;
+        private readonly IHostEnvironment _environment;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
@@ -33,13 +33,13 @@ namespace Mephist.Controllers
         }
 
         
-        public IActionResult Index(string search, int page = 1, int onPage=10)
+        public IActionResult Index(string search, int page = 1, int onPage=30)
         {
             List<Employee> employees;
             if (search==null)
-                employees = _repository.GetEmployees().ToList();
+                employees = _repository.GetEmployees().OrderBy(x=>x.FullName).ToList();
             else
-                employees = _repository.GetEmployeesFuzzy(search,Fuzz.PartialRatio).ToList();
+                employees = _repository.GetEmployeesFuzzy(search).ToList();
 
             
             
@@ -109,18 +109,17 @@ namespace Mephist.Controllers
         }
 
         [HttpGet]
-        public IActionResult AutocompleteSearch()
+        public JsonResult AutocompleteSearch()
         {
-            /*
-            if (term == null)
-                return StatusCode(400);
-            var models = _repository.GetEmployees()
-                .Where(em => em.FullName.ToUpper().Contains(term.ToUpper()))
-                .Select(em => new { em.FullName })
-                .Distinct();
-            return Json(models);
-            */
-            return Json(_repository.GetEmployees().Select(em =>new { value = em.FullName }).Distinct());
+            return Json(_repository.GetEmployees().Select(em =>new { value = em.FullName }));
+        }
+
+        [HttpDelete]
+        [Authorize(Roles = "admin")]
+        [Route("Delete")]
+        public void Delete(int? id)
+        {
+            _repository.DeleteEmployee(id);
         }
     }
 }

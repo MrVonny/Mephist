@@ -16,21 +16,6 @@ namespace Mephist.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.0");
 
-            modelBuilder.Entity("DepartmentEmployee", b =>
-                {
-                    b.Property<int>("DepartmentsId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("EmployeesId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("DepartmentsId", "EmployeesId");
-
-                    b.HasIndex("EmployeesId");
-
-                    b.ToTable("DepartmentEmployee");
-                });
-
             modelBuilder.Entity("Mephist.EducationalMaterial", b =>
                 {
                     b.Property<int>("Id")
@@ -96,15 +81,26 @@ namespace Mephist.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Departments")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Positions")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Subjects")
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Employees");
                 });
@@ -160,41 +156,6 @@ namespace Mephist.Migrations
                     b.ToTable("Medias");
                 });
 
-            modelBuilder.Entity("Mephist.Models.Rating", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("CharacterScore")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("CharacterVotes")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("EmployeeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ExamsScore")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ExamsVotes")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TeachingScore")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TeachingVotes")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
-
-                    b.ToTable("Ratings");
-                });
-
             modelBuilder.Entity("Mephist.Models.Review", b =>
                 {
                     b.Property<int>("Id")
@@ -208,6 +169,9 @@ namespace Mephist.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("EmployeeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("Score")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Text")
@@ -445,21 +409,6 @@ namespace Mephist.Migrations
                     b.HasDiscriminator().HasValue("LaboratoryJournal");
                 });
 
-            modelBuilder.Entity("DepartmentEmployee", b =>
-                {
-                    b.HasOne("Mephist.Models.Department", null)
-                        .WithMany()
-                        .HasForeignKey("DepartmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Mephist.Models.Employee", null)
-                        .WithMany()
-                        .HasForeignKey("EmployeesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Mephist.EducationalMaterial", b =>
                 {
                     b.HasOne("Mephist.Models.Employee", "Employee")
@@ -476,6 +425,13 @@ namespace Mephist.Migrations
                         .HasForeignKey("InstituteName");
 
                     b.Navigation("Institute");
+                });
+
+            modelBuilder.Entity("Mephist.Models.Employee", b =>
+                {
+                    b.HasOne("Mephist.Models.Department", null)
+                        .WithMany("Employees")
+                        .HasForeignKey("DepartmentId");
                 });
 
             modelBuilder.Entity("Mephist.Models.Media", b =>
@@ -497,15 +453,6 @@ namespace Mephist.Migrations
                     b.Navigation("Employee");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Mephist.Models.Rating", b =>
-                {
-                    b.HasOne("Mephist.Models.Employee", "Employee")
-                        .WithOne("Rating")
-                        .HasForeignKey("Mephist.Models.Rating", "EmployeeId");
-
-                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Mephist.Models.Review", b =>
@@ -579,13 +526,16 @@ namespace Mephist.Migrations
                     b.Navigation("Materials");
                 });
 
+            modelBuilder.Entity("Mephist.Models.Department", b =>
+                {
+                    b.Navigation("Employees");
+                });
+
             modelBuilder.Entity("Mephist.Models.Employee", b =>
                 {
                     b.Navigation("EducationalMaterials");
 
                     b.Navigation("Medias");
-
-                    b.Navigation("Rating");
 
                     b.Navigation("Reviews");
                 });

@@ -51,7 +51,7 @@
             else
             {
                 <div class="d-inline">
-                    <a class="mx-2" asp-controller="Account" asp-action="Login">Войти</a>
+                    <a class="mx-2" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewContext.ActionDescriptor.DisplayName">Войти</a>
                     <a class="mx-2" asp-controller="Account" asp-action="Register">Зарегистрироваться</a>
                 </div>
 

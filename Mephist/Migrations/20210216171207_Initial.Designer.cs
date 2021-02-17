@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Mephist.Migrations
 {
     [DbContext(typeof(UniversityContext))]
-    [Migration("20201124231448_First")]
-    partial class First
+    [Migration("20210216171207_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.9");
+                .HasAnnotation("ProductVersion", "5.0.0");
 
             modelBuilder.Entity("Mephist.EducationalMaterial", b =>
                 {
@@ -25,8 +25,8 @@ namespace Mephist.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(4000)")
-                        .HasMaxLength(4000);
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
@@ -37,8 +37,8 @@ namespace Mephist.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Subject")
                         .HasColumnType("TEXT");
@@ -55,29 +55,66 @@ namespace Mephist.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("EducationalMaterial");
                 });
 
+            modelBuilder.Entity("Mephist.Models.Department", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("InstituteId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("InstituteName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InstituteName");
+
+                    b.ToTable("Departments");
+                });
+
             modelBuilder.Entity("Mephist.Models.Employee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Department")
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Departments")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("Institutions")
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Positions")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Subjects")
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DepartmentId");
+
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("Mephist.Models.Institute", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("Institutions");
                 });
 
             modelBuilder.Entity("Mephist.Models.Media", b =>
@@ -173,8 +210,8 @@ namespace Mephist.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("nvarchar(4000)")
-                        .HasMaxLength(4000);
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("TEXT");
@@ -201,8 +238,8 @@ namespace Mephist.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
@@ -220,12 +257,12 @@ namespace Mephist.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("TEXT");
@@ -243,17 +280,17 @@ namespace Mephist.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
+                        .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex");
+                        .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -268,18 +305,18 @@ namespace Mephist.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex");
+                        .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -411,6 +448,24 @@ namespace Mephist.Migrations
                     b.HasOne("Mephist.Models.Employee", "Employee")
                         .WithMany("EducationalMaterials")
                         .HasForeignKey("EmployeeId");
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("Mephist.Models.Department", b =>
+                {
+                    b.HasOne("Mephist.Models.Institute", "Institute")
+                        .WithMany("Departments")
+                        .HasForeignKey("InstituteName");
+
+                    b.Navigation("Institute");
+                });
+
+            modelBuilder.Entity("Mephist.Models.Employee", b =>
+                {
+                    b.HasOne("Mephist.Models.Department", null)
+                        .WithMany("Employees")
+                        .HasForeignKey("DepartmentId");
                 });
 
             modelBuilder.Entity("Mephist.Models.Media", b =>
@@ -426,6 +481,12 @@ namespace Mephist.Migrations
                     b.HasOne("Mephist.User", "User")
                         .WithMany("Photos")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("EducationalMaterial");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Mephist.Models.Rating", b =>
@@ -433,6 +494,8 @@ namespace Mephist.Migrations
                     b.HasOne("Mephist.Models.Employee", "Employee")
                         .WithOne("Rating")
                         .HasForeignKey("Mephist.Models.Rating", "EmployeeId");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Mephist.Models.Review", b =>
@@ -444,6 +507,10 @@ namespace Mephist.Migrations
                     b.HasOne("Mephist.User", "User")
                         .WithMany("Reviews")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -495,6 +562,39 @@ namespace Mephist.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Mephist.EducationalMaterial", b =>
+                {
+                    b.Navigation("Materials");
+                });
+
+            modelBuilder.Entity("Mephist.Models.Department", b =>
+                {
+                    b.Navigation("Employees");
+                });
+
+            modelBuilder.Entity("Mephist.Models.Employee", b =>
+                {
+                    b.Navigation("EducationalMaterials");
+
+                    b.Navigation("Medias");
+
+                    b.Navigation("Rating");
+
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("Mephist.Models.Institute", b =>
+                {
+                    b.Navigation("Departments");
+                });
+
+            modelBuilder.Entity("Mephist.User", b =>
+                {
+                    b.Navigation("Photos");
+
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

@@ -13,15 +13,17 @@
         <input type="text" class="form-control" name="search">
     </div>
 </form>
+<div class="container justify-content-center">
+    @await Component.InvokeAsync("PageNavigation", new { action = "Index", controller = "Employee", page = ViewBag.Page, maxPage = ViewBag.MaxPage })
+</div>
 <table class="table">
     <thead>
         <tr>
             <td><b>ФИО</b></td>
-            <td><b>Инстиуты</b></td>
-            <td><b>Кафедра</b></td>
+            <td><b>Должности</b></td>
+            <td><b>Кафедры</b></td>
             <td><b>Предметы</b></td>
-            <td><b>Учебные материалы</b></td>
-            <td><b>Отзывы</b></td>
+            <td><b>Учебные материалы</b></td>          
         </tr>
     </thead>
 

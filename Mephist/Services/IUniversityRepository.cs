@@ -11,19 +11,19 @@ namespace Mephist.Services
     {
         //TODO: IEnumerable and IQueryable      
         //Статическая инфа
-        
-
-
-
 
         IEnumerable<Employee> GetEmployees();
-        IEnumerable<Employee> GetEmployeesFuzzy(string fullName, Func<string, string, int> compareFunc, int similarity=50);
+        //IEnumerable<Employee> GetEmployeesFuzzy(string fullName, Func<string, string, int> compareFunc, int similarity=50);
+        IEnumerable<Employee> GetEmployeesFuzzy(string fullName);
         Employee GetEmployee(string fullName);
         Employee GetEmployee(int? id);
         void CreateEmployee(Employee employee);
         void DeleteEmployee(Employee employee);
         void DeleteEmployee(int? id);
         void DeleteEmployee(string fullname);
+        bool ExistsEmployee(string fullname);
+        void UpdateEmployee(int id, Employee newEmployee);
+        void UpdateEmployee(string fullName, Employee newEmployee);
 
 
         IEnumerable<LaboratoryJournal> GetLaboratoryJournals();
@@ -56,12 +56,7 @@ namespace Mephist.Services
         void DeleteReview(Review review);
         void DeleteReview(int? id);
 
-        IEnumerable<Rating> GetRating();
-        Rating GetRating(int? id);
-        void CreateRating(Rating rating);
-        void DeleteRating(int? id);
-        void DeleteRating(Rating rating);
-
+       
         User GetUserById(string id);
         User GetUserByEmail(string email);
         User GetUserByUserName(string userName);

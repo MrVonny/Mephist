@@ -39,9 +39,9 @@ namespace Mephist.Controllers
             {
                 Employee employee = _repository.GetEmployee(model.EmployeeFullName);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ModelState.AddModelError("FullName", ex.Message);
+                ModelState.AddModelError("FullName", "Преподаватель не найден");
             }
 
             if (model.Work == null)

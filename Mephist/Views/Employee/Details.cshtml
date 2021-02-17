@@ -19,7 +19,7 @@
             <tr>
                 <td>Преподаёт предметы:</td>
                 <td>
-                    @if (Model.Subjects != null) foreach (var subject in Model.Subjects.Split(';'))
+                    @if (Model.Subjects != null) foreach (var subject in Model.Subjects)
                     {
                         <a href="#">@subject</a>
                     }

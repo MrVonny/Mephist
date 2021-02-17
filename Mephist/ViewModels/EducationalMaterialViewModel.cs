@@ -26,19 +26,19 @@ namespace Mephist.ViewModels
         [Required(ErrorMessage = "Выберите предмет")]
         [Display(Name = "Предмет")]
         public string Subject { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Выберите тип")]
         [Display(Name = "Тип")]
         public EducationalMaterialType Type { get; set; }
-        [Display(Name = "Номер работы")]    
+        [Display(Name = "Номер работы")]     
         public virtual string Work { get; set; }
-        [Range(1, 4)]
+        [Range(1, 4, ErrorMessage = "Укажите семестр от 1 до 4")]
         [Display(Name = "Семестр")]       
         public virtual int? Semester { get; set; }
         [Display(Name = "Год")]       
-        [Range(1990,2030)]
+        [Range(1990,2030, ErrorMessage = "Укажите реальную дату")]
         public virtual int? Year { get; set; }
         [Display(Name = "Оценка")]
-        [Range(60, 100)]        
+        [Range(60, 100, ErrorMessage = "Оценка может быть от 60 до 100 баллов")]        
         public virtual int? Mark { get; set; }
 
 

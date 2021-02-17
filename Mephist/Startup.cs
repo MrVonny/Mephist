@@ -38,7 +38,7 @@ namespace Mephist
 
             services.AddTransient<IUniversityRepository, UniversityRepository>();
             services.AddDbContext<UniversityContext>(options =>
-                    options.UseLazyLoadingProxies().UseSqlite(Configuration.GetConnectionString("SQlite")));
+                    options.UseLazyLoadingProxies().UseSqlite(Configuration.GetConnectionString("SQLite")));
 
             services.Configure<IdentityOptions>(option =>
             {
@@ -55,6 +55,8 @@ namespace Mephist
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddScoped<UniversityStaticData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

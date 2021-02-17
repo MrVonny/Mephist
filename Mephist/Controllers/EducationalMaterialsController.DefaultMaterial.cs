@@ -50,7 +50,7 @@ namespace Mephist.Controllers
                 list = list.Where(em => types.Contains(em.Type));
             if (!String.IsNullOrEmpty(employee))
             {
-                var employees = _repository.GetEmployeesFuzzy(employee, Fuzz.PartialRatio);
+                var employees = _repository.GetEmployeesFuzzy(employee);
                 list = list.Where(em => employees.Contains(em.Employee));
             }
             if (!String.IsNullOrEmpty(name))
@@ -60,6 +60,7 @@ namespace Mephist.Controllers
             }
 
             ViewBag.EducationalMaterialsList = list.ToList();
+            
             return View();
         }
 
@@ -71,9 +72,9 @@ namespace Mephist.Controllers
             {
                 Employee employee = _repository.GetEmployee(model.EmployeeFullName);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ModelState.AddModelError("FullName", ex.Message);
+                ModelState.AddModelError("FullName", "Преподаватель не найден");
 
             }
             if (uploads.Count <= 0) ModelState.AddModelError("Files", "Не загржен ни один файл");

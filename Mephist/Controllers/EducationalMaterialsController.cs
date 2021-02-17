@@ -24,12 +24,13 @@ namespace Mephist.Controllers
     public partial class EducationalMaterialsController : Controller
     {
 
-        private IUniversityRepository _repository;
-        private IWebHostEnvironment _webHost;
+        private readonly IUniversityRepository _repository;
+        private readonly IWebHostEnvironment _webHost;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly UniversityStaticData _universityStaticData;
 
-        List<SelectListItem> Types = new List<SelectListItem>()
+        readonly List<SelectListItem> Types = new List<SelectListItem>()
             {
                 new SelectListItem("Другое","-1"),
                 new SelectListItem("Лекции","1"),
@@ -40,17 +41,17 @@ namespace Mephist.Controllers
                 new SelectListItem("Курсовая работа","6")
             };
 
-        public EducationalMaterialsController(IUniversityRepository repository, IWebHostEnvironment webHost, UserManager<User> userManager, SignInManager<User> signInManager)
+        public EducationalMaterialsController(IUniversityRepository repository, IWebHostEnvironment webHost,
+                                              UserManager<User> userManager, SignInManager<User> signInManager,
+                                              UniversityStaticData universityStaticData)
         {
+            _universityStaticData = universityStaticData;
             _repository = repository;
             _webHost = webHost;
             _userManager = userManager;
             _signInManager = signInManager;
         }
-
-        
-
-        
+   
         public IActionResult Download(int id)
         {
             EducationalMaterial em = _repository.GetEducationalMaterial(id);
@@ -65,27 +66,23 @@ namespace Mephist.Controllers
 
             }
 
-            using (var memoryStream = new MemoryStream())
+            using (MemoryStream memoryStream = new MemoryStream())
             {
-                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                using var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true);
+                for (int i = 0; i < materials.Count; i++)
                 {
-                    for (int i = 0; i < materials.Count; i++)
-                    {
-                        var fileInArchive = archive.CreateEntry(materials[i].MediaName, CompressionLevel.Optimal);
+                    var fileInArchive = archive.CreateEntry(materials[i].MediaName, CompressionLevel.Optimal);
 
-                        using (var entryStream = fileInArchive.Open())
-                        using (var fileToCompressStream = new MemoryStream(files[i]))
-                        {
-                            fileToCompressStream.CopyTo(entryStream);
-                        }
-                        
-                    }
-                    archive.Dispose();
+                    using var entryStream = fileInArchive.Open();
+                    using var fileToCompressStream = new MemoryStream(files[i]);
+                    fileToCompressStream.CopyTo(entryStream);
 
-                    compressed = memoryStream.ToArray();
                 }
+                archive.Dispose();
 
-                
+                compressed = memoryStream.ToArray();
+
+
             }
             //GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(2, GCCollectionMode.Forced, false, true);
@@ -97,7 +94,6 @@ namespace Mephist.Controllers
         [Authorize]
         public IActionResult AddMaterial()
         {
-            
             ViewBag.Types = Types;
             return View();
 
@@ -111,6 +107,27 @@ namespace Mephist.Controllers
             LaboratoryJournal lj = _repository.GetLaboratoryJournal(id);
 
             return View(lj);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        //ToDo:
+        //Убрать returnUrl и сделать удаление через AJAX.
+        public IActionResult Delete(int? id, string returnUrl)
+        {
+            if (id is null)
+                return StatusCode(400);
+            _repository.DeleteEducationalMaterial(id);
+            _repository.SaveChanges();
+            return RedirectToAction("GetMaterials");
+        }
+
+
+        [HttpGet]
+        public JsonResult SubjectsAutocompleteSearch()
+        {
+            var subjects = _universityStaticData.GetSubjects();             
+            return Json(subjects.Select(x=> new { value = x}));
         }
     }
 }
