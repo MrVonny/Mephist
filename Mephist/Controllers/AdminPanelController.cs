@@ -26,20 +26,20 @@ namespace Mephist.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SynchronizeEmployees()
+        public IActionResult SynchronizeEmployees()
         {
             try
             {
                 EmployeeParser parser = new EmployeeParser();
-                var employees = await parser.GetEmployees();
-                foreach (var emp in employees)
+                var employees = parser.GetEmployees();
+                Parallel.ForEach(employees, (emp) =>
                 {
+                    lock(_repository)
                     if (!_repository.ExistsEmployee(emp.FullName))
                         _repository.CreateEmployee(emp);
                     else
                         _repository.UpdateEmployee(emp.FullName, emp);
-                    
-                }
+                });
                 
             }
             catch(Exception ex)

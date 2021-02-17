@@ -126,7 +126,8 @@ namespace Mephist.Services
         }
         public Employee GetEmployee(string fullName)
         {
-            return _context.Employees.Single(em => fullName.Equals(em.FullName));
+            return _context.Employees.First(em => fullName.Equals(em.FullName));
+            
         }
         public  Employee GetEmployee(int? id)
         {

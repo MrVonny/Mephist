@@ -46,6 +46,7 @@ namespace Mephist.Controllers
             ViewBag.EmployeesList = employees.Skip((page-1)*onPage).Take(onPage);
             ViewBag.MaxPage = (employees.Count - 1) / onPage + 1;
             ViewBag.Page = page>ViewBag.MaxPage ? ViewBag.MaxPage : page;
+            ViewBag.Search = search;
 
             return View();
         }
