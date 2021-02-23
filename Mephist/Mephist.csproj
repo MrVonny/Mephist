@@ -31,7 +31,8 @@
     <Folder Include="wwwroot\assets\" />
     <Folder Include="wwwroot\bundles\" />
     <Folder Include="wwwroot\Content\" />
-    <Folder Include="wwwroot\js\ViewLabJournals\" />
+    <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\vendor\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties package_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
