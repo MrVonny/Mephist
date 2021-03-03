@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using FuzzySharp;
 using System.Diagnostics;
+using HeyRed.Mime;
 
 namespace Mephist.Controllers
 {
@@ -60,16 +61,6 @@ namespace Mephist.Controllers
             return View(model);
         }
 
-        public FileResult GetAvatar(int? employeeId)
-        {
-            Employee employee = _repository.GetEmployee(employeeId);
-            string path;
-            if (employee == null || employee.Medias.Count == 0)
-                path = Media.DefaultAvatarPath;
-            else
-                path = employee.Medias.First().GetPath();
-            return File($@"Content/{path}", "image/png");
-        }
 
         public IActionResult AddTeacher()
         {
