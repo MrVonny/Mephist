@@ -18,6 +18,15 @@
     {
       "library": "popper.js@2.6.0",
       "destination": "wwwroot/lib/popper.js/"
+    },
+    {
+      "library": "jquery-sortable@0.9.13",
+      "destination": "wwwroot/lib/jquery-sortable/"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "sortablejs@1.13.0",
+      "destination": "wwwroot/lib/sortablejs/"
     }
   ]
 }
