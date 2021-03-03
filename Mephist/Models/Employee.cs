@@ -13,6 +13,7 @@ namespace Mephist.Models
     //ToDo: Реализовать атрибуты
     public class Employee
     {
+        #region Properties
         [Key]
         public int Id { get; set; }
         [Display(Name = "ФИО")]
@@ -25,17 +26,24 @@ namespace Mephist.Models
         public List<string> Subjects { get; set; }
         public virtual List<EducationalMaterial> EducationalMaterials { get; set; } = new List<EducationalMaterial>();
         public virtual List<Review> Reviews { get; set; } = new List<Review>();
-        public virtual List<Media> Photos { get; set; } = new List<Media>();
+        //public int? PhotoAvatarId { get; set; }
+        //public virtual Media PhotoAvatar { get; set; }
        
-        public string GetAvatarPath()
-        {
-            if (Photos.Count == 0)
-                return Media.DefaultAvatarPath;
-            else
-                return Photos.First().GetPath();
-        }
+        public virtual List<Media> Medias { get; set; } = new List<Media>();
+       
+
+
+        #endregion
 
         #region Constructors
+
+
+        public string GetAvatarPath()
+        {
+            
+            if (Medias.Count == 0) return Media.DefaultAvatarPath;
+            return Medias.First().GetPath();
+        }
 
         #endregion
 

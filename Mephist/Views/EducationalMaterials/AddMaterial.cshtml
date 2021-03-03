@@ -5,7 +5,8 @@
 
 @section stylesheets
 {
-
+    <link rel="stylesheet" href="~/lib/PhotoSwipe/dist/photoswipe.css">
+    <link rel="stylesheet" href="~/lib/PhotoSwipe/dist/default-skin/default-skin.css">
 
 }
 
@@ -69,49 +70,35 @@
         <input class="form-control" id="uploads" accept="image/*" type="file" name="uploads" multiple />
     </div>
     <style>
-
+        
         #uploads-preview {
+            
             height: auto;
             margin: 0;
             padding: 0;
+            
         }
 
             #uploads-preview div {
+                
                 max-height: 300px;
                 text-align: center;
             }
 
-        .img-thumbnail {
-            max-height: 250px;
-            width: 100%;
+        .img-thumbnail{
+            max-height:250px;
+            width:100%;
         }
 
         .thumb-name {
             font-size: 14px;
         }
-
-        .ghost {
-            opacity: 0.5;
-            background: #00d9ff;
-        }
-
-            .ghost > img {
-                opacity: 0;
-            }
-
-            .ghost > span {
-                opacity: 0;
-            }
     </style>
     <div class="w-100 my-2">
         <div id="uploads-preview" class="container row">
         </div>
     </div>
-
+    
     <button type="submit" class="btn btn-primary my-2">Добавить</button>
 </form>
 
-@section scripts{
-
-    <script src="~/lib/sortablejs/Sortable.min.js"></script>
-}

@@ -31,9 +31,8 @@ namespace Mephist.Services
         void CreateLaboratoryJournal(LaboratoryJournal labJournal);
         void DeleteLaboratoryJournal(int? id);
         void DeleteLaboratoryJournal(LaboratoryJournal labJournal);
-        
+
         IEnumerable<EducationalMaterial> GetEducationalMaterials();
-        
         IEnumerable<EducationalMaterial> GetEducationalMaterialsFuzzy(string name, Func<string, string, int> compareFunc, int similarity = 50);
         EducationalMaterial GetEducationalMaterial(int? id);
         void CreateEducationalMaterial(EducationalMaterial educationalMaterial);
@@ -47,6 +46,7 @@ namespace Mephist.Services
         void CreateMediaRange(Media[] medias);
         void DeleteMedia(int? id);
         void DeleteMedia(Media media);
+
         IEnumerable<Review> GetReviews();
         IEnumerable<Review> GetReviews(Employee employee);
         IEnumerable<Review> GetReviews(User user);

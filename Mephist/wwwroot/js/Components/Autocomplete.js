@@ -15,7 +15,7 @@ $(document).ready(function () {
         $(".employee-input").autocomplete({
             source: res,
             delay: 100,
-            minLength: 1
+            minLength: 3
         });
     });
 
@@ -33,7 +33,7 @@ $(document).ready(function () {
         $(".subject-input").autocomplete({
             source: res,
             delay: 100,
-            minLength: 1
+            minLength: 3
         });
     });
     

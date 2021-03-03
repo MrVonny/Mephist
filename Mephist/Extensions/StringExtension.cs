@@ -10,9 +10,10 @@ namespace Mephist.Extensions
 {
     public static class StringExtension
     {
-        public static string Transliterate(this string str, bool onlyLettersAndDigits = false)
+        public static string Transliterate(this string str)
         {
-            Dictionary<string, string> translitLetters = new Dictionary<string, string>();
+            
+            Dictionary<string, string> translitLetters  = new Dictionary<string, string>();
 
             #region Letters
             translitLetters.Add("а", "a");
@@ -84,22 +85,16 @@ namespace Mephist.Extensions
             #endregion
 
             StringBuilder builder = new StringBuilder();
-            foreach (var letter in str ?? throw new ArgumentNullException())
-
+            foreach(var letter in str ?? throw new ArgumentNullException())
+            
                 if (translitLetters.ContainsKey(letter.ToString()))
                     builder.Append(translitLetters[letter.ToString()]);
                 else
-                {
-                    if (onlyLettersAndDigits)
-                        builder.Append(Char.IsLetter(letter)?letter:'_');
-                    else
-                        builder.Append(letter);
-                }
-                    
+                    builder.Append(letter);
             return builder.ToString();
 
         }
 
-
+       
     }
 }

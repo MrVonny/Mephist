@@ -4,17 +4,13 @@
         preview_box: "#uploads-preview",
         label_field: "#uploads-label"
     });
+    $("#uploads-preview").sortable();
     $("#uploads-preview").disableSelection();
     $("form").submit(function (event) {
         $("#Name").prop('disabled', false);
         CreateQuery();
     });
-    var el = document.getElementById('uploads-preview');
-    var sortable = Sortable.create(el, {
-        swapThreshold: 1,
-        animation: 150,
-        ghostClass: "ghost"
-    });
+
     function CreateQuery(event, ui) {
         var list = [];
         $("#uploads-preview").children().each(function (index) {

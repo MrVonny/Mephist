@@ -15,8 +15,6 @@
   "dependencies": {
     "jquery": "3.5.1",
     "bootstrap": "5.0.0-beta2",
-    "jquery-ui": "1.12.1",
-    "sortablejs": "1.13.0",
-    "jquery-sortablejs": "1.6.1"
+    "jquery-ui": "1.12.1"
   }
 }

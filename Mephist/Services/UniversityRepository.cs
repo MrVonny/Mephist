@@ -169,8 +169,8 @@ namespace Mephist.Services
             old.Positions = newEmployee.Positions;
             old.Subjects = newEmployee.Subjects;
 
-            if (newEmployee.Photos != null)
-                old.Photos.AddRange(newEmployee.Photos);
+            if (newEmployee.Medias != null)
+                old.Medias.AddRange(newEmployee.Medias);
             if (newEmployee.Reviews != null)
                 old.Reviews.AddRange(newEmployee.Reviews);
             if (newEmployee.EducationalMaterials != null)
@@ -220,8 +220,6 @@ namespace Mephist.Services
         {
             _context.Medias.Remove(media);
         }
-
-        
 
         #endregion
 

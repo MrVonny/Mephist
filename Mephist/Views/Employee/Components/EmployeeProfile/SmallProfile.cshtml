@@ -16,7 +16,7 @@
     <td>
         <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.Id">@Model.FullName</a>
         <br />
-        <img src="@Model.GetAvatarPath()" style="height: 100px; " />
+        <img src="@Url.Action("GetAvatar",new { employeeId = Model.Id})" style="height: 100px; " />
 
     </td>
     <td>

@@ -25,11 +25,11 @@ namespace Mephist.Models
         [Required]
         public string PartialMediaPath { get; set; }
         public string UserId { get; set; }
-        public virtual User User { get; set; }
+        public virtual  User User { get; set; }
         [Required]
         public DateTime CreatedDate { get; set; }
 
-        public static readonly string DefaultAvatarPath = @"Content/Shared/DefaultAvatar.jpg";
+        public static readonly string DefaultAvatarPath = @"Shared/DefaultAvatar.jpg";
         
 
         public Media()
@@ -61,6 +61,5 @@ namespace Mephist.Models
         {
             return PartialMediaPath + "/" + MediaName;
         }
-
     }
 }

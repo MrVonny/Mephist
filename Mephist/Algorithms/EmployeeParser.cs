@@ -1,8 +1,6 @@
 ﻿using HtmlAgilityPack;
 using Mephist.Data;
-using Mephist.Extensions;
 using Mephist.Models;
-using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +9,6 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using HeyRed.Mime;
 
 namespace Mephist.Algorithms
 {
@@ -25,16 +22,15 @@ namespace Mephist.Algorithms
             public static readonly string DeparmentAndIstitute = @"//h1[@class='text-center no-margin-top']/following-sibling::div[@class='list-group']/div/div";
             public static readonly string Subjects = @"//h3[text()='Преподаваемые дисциплины']/following::div[1]";
             public static readonly string LinkBlock = @"//a[@class='list-group-item list-group-item-user-public']";
-            public static readonly string Photo = @"//img[@class='user-responsive']";
         }
 
-        private static readonly string letters = "АБВГДЕЁЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ";
-        private static readonly string path = "https://home.mephi.ru";
+        private readonly string letters = "АБВГДЕЁЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ";
+        private readonly string path = "https://home.mephi.ru";
 
-        private readonly IWebHostEnvironment _webHost;
-        public EmployeeParser(IWebHostEnvironment webHost)
+        
+        public EmployeeParser()
         {
-            _webHost = webHost;
+            
         }
 
         public  List<Employee> GetEmployees()
@@ -53,89 +49,59 @@ namespace Mephist.Algorithms
             });
             return employees;
         }
-        private Employee ParseEmployee(string link)
+        private static Employee ParseEmployee(string link)
         {
-            using(WebClient webClient = new WebClient())
+            HtmlDocument html = new HtmlDocument();
+            WebClient webClient = new WebClient();
+            html.LoadHtml(webClient.DownloadString(link));
+            Employee employee = new Employee();
+
+            //ФИО
+            string fullName = html.DocumentNode.SelectSingleNode(XPaths.FullName).InnerText;
+            employee.FullName = fullName;
+
+            //Должности
+            var positionNodes = html.DocumentNode.SelectNodes(XPaths.Positions);
+            if (positionNodes != null)
             {
-                HtmlDocument html = new HtmlDocument();
-
-                html.LoadHtml(webClient.DownloadString(link));
-                Employee employee = new Employee();
-
-                //ФИО
-                string fullName = html.DocumentNode.SelectSingleNode(XPaths.FullName).InnerText;
-                employee.FullName = fullName;
-
-                //Должности
-                var positionNodes = html.DocumentNode.SelectNodes(XPaths.Positions);
-                if (positionNodes != null)
-                {
-                    var positions = positionNodes.Select(
-                            x => new String(x.InnerText.Where(l => Char.IsLetter(l) || l.Equals(' ')).ToArray())
-                        ).ToList();
-
-                    employee.Positions = positions;
-                }
-
-                //Предметы
-                var subjectsNode = html.DocumentNode.SelectSingleNode(XPaths.Subjects);
-                string dirtySubjects;
-                if (subjectsNode != null)
-                {
-                    dirtySubjects = subjectsNode.InnerText;
-
-                    List<string> subjects = new List<string>();
-
-                    Regex regex = new Regex(@"\d*\.\n([^\n]*)\n");
-                    Match matches = regex.Match(dirtySubjects);
-                    while (matches.Success)
-                    {
-                        string sub = matches.Groups[1].Value;
-                        subjects.Add(NormalizeSubject(sub));
-                        matches = matches.NextMatch();
-                    }
-
-                    employee.Subjects = subjects;
-
-                }
-
-                //Кафедры
-                var departmentsNode = html.DocumentNode.SelectSingleNode(XPaths.DeparmentAndIstitute);
-                if (departmentsNode != null)
-                {
-                    employee.Departments = departmentsNode.InnerText.Split(@" / ").ToList();
-                }
-
-                //Фотография
-                var photoNode = html.DocumentNode.SelectSingleNode(XPaths.Photo);
-                if(photoNode != null)
-                {
-                    string url = path + photoNode.Attributes["src"].Value.Replace("&#39;","'");
-                    string extension = url.Split('.').Last().Split('?').First();
-                    if (!extension.Equals("svg"))
-                    {
-                        string savePath = $"Content/Employees/{employee.FullName.Transliterate(true)}";
-                        var name = url.Split('/').Last().Split('.').First().Transliterate(true);
-                        name = $"Avatar_{DateTime.Now.ToLongDateString()}.{extension}";
-                        Directory.CreateDirectory(Path.Combine(_webHost.WebRootPath, savePath));
-                        webClient.DownloadFile(url, Path.Combine(_webHost.WebRootPath, savePath, name));
-
-                        Media photo = new Media()
-                        {
-                            PartialMediaPath = savePath,
-                            MediaName = name,
-                            CreatedDate = DateTime.Now,
-                            ContentType = MimeTypesMap.GetMimeType(name)
-                        };
-
-                        employee.Photos = new List<Media> { photo };
-
-                    }
-                   
-                }
-
-                return employee;
+                var positions = positionNodes.Select(
+                        x => new String(x.InnerText.Where(l => Char.IsLetter(l) || l.Equals(' ')).ToArray())
+                    ).ToList();
+         
+                employee.Positions = positions;
             }
+
+            //Предметы
+            var subjectsNode = html.DocumentNode.SelectSingleNode(XPaths.Subjects);
+            string dirtySubjects;
+            if (subjectsNode != null)
+            {
+                dirtySubjects = subjectsNode.InnerText;
+
+                List<string> subjects = new List<string>();
+
+                Regex regex = new Regex(@"\d*\.\n([^\n]*)\n");
+                Match matches = regex.Match(dirtySubjects);
+                while (matches.Success)
+                {
+                    string sub = matches.Groups[1].Value;
+                    subjects.Add(NormalizeSubject(sub));
+                    matches = matches.NextMatch();
+                }
+
+                employee.Subjects = subjects;
+
+            }
+
+            //Кафедры
+            var departmentsNode = html.DocumentNode.SelectSingleNode(XPaths.DeparmentAndIstitute);
+            if(departmentsNode != null)
+            {
+                employee.Departments = departmentsNode.InnerText.Split(@" / ").ToList();               
+            }
+            
+            return employee;
+
         }
         private List<string> GetLinks()
         {

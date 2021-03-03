@@ -5,8 +5,7 @@
 
 #Content
 
-Mephist/wwwroot/Content/Employees
-Mephist/wwwroot/Content/EducationalMaterials
+#Mephist/wwwroot/Content/*
 
 # User-specific files
 *.rsuser
