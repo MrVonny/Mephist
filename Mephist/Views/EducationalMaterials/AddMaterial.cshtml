@@ -10,10 +10,18 @@
 }
 
 <h1>Добавление материала</h1>
+<span>* - обязательны для заполнения</span>
 <form method="post" id="add-material-form" asp-controller="EducationalMaterials" asp-action="AddMaterial" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="form-group"></div>
     <div class="form-group mb-3">
-        <label asp-for="Name"></label>
+        <label asp-for="Type"></label>*
+        <select class="form-control" id="typeInput" asp-for="Type" asp-items="ViewBag.Types">
+            <option value="">Выберите тип</option>
+        </select>
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Name"></label>*
         <input class="form-control" asp-for="Name" />
         <span asp-validation-for="Name"></span>
     </div>
@@ -23,22 +31,16 @@
         <span asp-validation-for="Description"></span>
     </div>
     <div class="form-group mb-3">
-        <label asp-for="EmployeeFullName"></label>
+        <label asp-for="EmployeeFullName"></label>*
         <input class="form-control employee-input" asp-for="EmployeeFullName" />
         <span asp-validation-for="EmployeeFullName"></span>
     </div>
     <div class="form-group mb-3">
-        <label asp-for="Subject"></label>
+        <label asp-for="Subject"></label>*
         <input class="form-control subject-input" asp-for="Subject" />
         <span asp-validation-for="Subject"></span>
     </div>
-    <div class="form-group mb-3">
-        <label asp-for="Type"></label>
-        <select class="form-control" id="typeInput" asp-for="Type" asp-items="ViewBag.Types">
-            <option value="">Выберите тип</option>
-        </select>
-        <span asp-validation-for="Type"></span>
-    </div>
+
 
     <div id="labJournalInput" style="display: none">
         <div class="form-group mb-3">
@@ -68,6 +70,7 @@
         <label id="uploads-label">Файлы</label>
         <input class="form-control" id="uploads" accept="image/*" type="file" name="uploads" multiple />
     </div>
+    <span class="text-info">Расставьте файлы в нужном порядке</span>
     <style>
 
         #uploads-preview {

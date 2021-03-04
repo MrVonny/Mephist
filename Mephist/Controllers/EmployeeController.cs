@@ -113,5 +113,20 @@ namespace Mephist.Controllers
         {
             _repository.DeleteEmployee(id);
         }
+
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        //ToDo:
+        //Убрать returnUrl и сделать удаление через AJAX.
+        public IActionResult Delete(int? id, string returnUrl)
+        {
+            if (id is null)
+                return StatusCode(400);
+            _repository.DeleteReview(id);
+            _repository.SaveChanges();
+            return RedirectToAction("GetMaterials");
+        }
+
+
     }
 }

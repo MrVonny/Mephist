@@ -8,9 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNet.Security.OAuth.Vkontakte" Version="5.0.1" />
     <PackageReference Include="DuoVia.FuzzyStrings" Version="2.1.0" />
     <PackageReference Include="FuzzySharp" Version="2.0.2" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.30" />
+    <PackageReference Include="MailKit" Version="2.10.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
@@ -23,6 +25,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.0" />
+    <PackageReference Include="MimeKit" Version="2.10.1" />
     <PackageReference Include="MimeTypesMap" Version="1.0.8" />
     <PackageReference Include="symspell" Version="6.5.0" />
     <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />

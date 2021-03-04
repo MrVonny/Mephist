@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using AspNet.Security.OAuth.Vkontakte;
+
 
 namespace Mephist
 {
@@ -30,11 +32,12 @@ namespace Mephist
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdentity<User, IdentityRole>(options => {
-                options.SignIn.RequireConfirmedAccount = false;
-                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedAccount = true;
+                options.SignIn.RequireConfirmedEmail = true;
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequireNonAlphanumeric = false;
-            }).AddEntityFrameworkStores<UniversityContext>();
+            }).AddEntityFrameworkStores<UniversityContext>()
+              .AddDefaultTokenProviders();
 
             services.AddTransient<IUniversityRepository, UniversityRepository>();
             services.AddDbContext<UniversityContext>(options =>
@@ -52,6 +55,12 @@ namespace Mephist
                 
             });
 
+            services.AddAuthentication()
+                .AddVkontakte(options =>
+                {
+                    options.ClientId = "7779983";
+                    options.ClientSecret = "y2eTDQ0zta2XYqDhdGx1";
+                });
 
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -79,7 +88,7 @@ namespace Mephist
 
             app.UseRouting();
 
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
             
@@ -92,5 +101,6 @@ namespace Mephist
                 endpoints.MapRazorPages();
             });
         }
+
     }
 }

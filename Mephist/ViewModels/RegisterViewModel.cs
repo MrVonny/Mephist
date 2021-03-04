@@ -10,8 +10,8 @@ namespace Mephist.ViewModels
     {
 
 
-        [Display(Name = "Логин")]
-        [Required(ErrorMessage = "Введите логин")]
+        [Display(Name = "Имя пользователя")]
+        [Required(ErrorMessage = "Введите имя пользователя")]
         [MaxLength(30, ErrorMessage = "Максимальная длина 30 символов")]
         [MinLength(5, ErrorMessage = "Минимальная длина 5 символов")]
         public string UserName { get; set; }
@@ -21,7 +21,7 @@ namespace Mephist.ViewModels
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите пароль")]
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }

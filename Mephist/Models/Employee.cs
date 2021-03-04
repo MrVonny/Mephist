@@ -26,13 +26,10 @@ namespace Mephist.Models
         public virtual List<EducationalMaterial> EducationalMaterials { get; set; } = new List<EducationalMaterial>();
         public virtual List<Review> Reviews { get; set; } = new List<Review>();
         public virtual List<Media> Photos { get; set; } = new List<Media>();
-       
+
         public string GetAvatarPath()
         {
-            if (Photos.Count == 0)
-                return Media.DefaultAvatarPath;
-            else
-                return Photos.First().GetPath();
+            return "~/" + (Photos.Count == 0 ? Media.DefaultAvatarPath : Photos.First().GetPath());
         }
 
         #region Constructors

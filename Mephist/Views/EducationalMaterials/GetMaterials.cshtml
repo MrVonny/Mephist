@@ -8,16 +8,16 @@
     <h1>Учбеные материалы</h1>
     <div class="mb-2">
         <form class="row g-3" method="get" asp-action="GetMaterials">
-            <div class=" form-floating col-6">
+            <div class=" form-floating col-9 col-md-6">
                 <input type="text" class="form-control" name="name" id="floatingName" placeholder="name@example.com">
                 <label for="floatingName">Название</label>
             </div>
-            <div class="col-2">
+            <div class="col-3 col-md-3">
                 <button class="btn btn-outline-primary h-100 w-100" type="submit">Найти</button>
             </div>
 
-            <div class="form-floating col-8">
-                <input type="text" class="form-control" name="employee" id="floatingEmployee" placeholder="name@example.com">
+            <div class="form-floating col-12 col-md-9">
+                <input type="text" class="form-control employee-input" name="employee" id="floatingEmployee" placeholder="name@example.com">
                 <label for="floatingEmployee">Преподаватель</label>
             </div>
             <div class="col-12 col-md-6">

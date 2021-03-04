@@ -13,10 +13,15 @@ $(document).ready(function () {
         }
     }).done(function (res) {
         $(".employee-input").autocomplete({
-            source: res,
+
+            source: function (request, response) {
+                var results = $.ui.autocomplete.filter(res, request.term);
+
+                response(results.slice(0, 10));
+            },
             delay: 100,
-            minLength: 1
-        });
+            minLength: 1           
+       });
     });
 
     $.ajax({
@@ -31,7 +36,11 @@ $(document).ready(function () {
         }
     }).done(function (res) {
         $(".subject-input").autocomplete({
-            source: res,
+            source: function (request, response) {
+                var results = $.ui.autocomplete.filter(res, request.term);
+
+                response(results.slice(0, 10));
+            },
             delay: 100,
             minLength: 1
         });

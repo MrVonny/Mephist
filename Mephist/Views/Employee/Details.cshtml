@@ -5,30 +5,24 @@
 }
 
 <div class="container row my-5">
-    <div class="col-md-4 d-flex flex-row">
-        <div>
-            <img src="@Model.GetAvatarPath()" style="height: 200px; " />         
-        </div>
-        <div>
-            Рейтинг
-        </div>
+    <div class="col-12 col-md-4">
+        <img src="@Url.Content(Model.GetAvatarPath())" class="img-fluid" />
     </div>
-    <div class="col-md-8">
+    <div class="col-12 col-md-8">
         <h1>@Model.FullName</h1>
         <table class="table table-borderless">
             <tr>
                 <td>Преподаёт предметы:</td>
                 <td>
                     @if (Model.Subjects != null) foreach (var subject in Model.Subjects)
-                    {
-                        <a href="#">@subject</a>
-                    }
+                        {
+                            <a href="#">@subject</a>
+                        }
                 </td>
             </tr>
             <tr>
                 <td>Преподаёт в институтах:</td>
                 <td>
-                    
                 </td>
             </tr>
         </table>
@@ -64,23 +58,20 @@
             await Html.RenderPartialAsync("_AddReview", reviewVM);
 
         }
-        @for (int i = Model.Reviews.Count - 1; i >= 0; i--)
+        @foreach (var review in Model.Reviews.OrderByDescending(r => r.CreatedDate))
         {
-            var review = Model.Reviews[i];
-            <div>
-                @if (review.Anonymously)
-                {
-                    <h3>Аноним</h3>
-                    <img src="@Url.Action("GetAvatar")" style="height: 200px; " />
-                }
-                else
-                {
-                    <h3>@review.User.UserName</h3>
-                    <img src="@Url.Action("GetAvatar")" style="height: 200px; " />
-                }
+            <div class="m-3">
+                <div class="col-12">
+                    <strong>@(review.Anonymously ? "Аноним" : review.User.UserName)</strong>
+                    <span>@review.CreatedDate.ToLongDateString() @review.CreatedDate.ToShortTimeString()</span>
+                </div>
+                <div class="col-12">
+                    <p>
+                        @review.Text
+                    </p>
+                </div>
             </div>
-            <p>@review.CreatedDate.ToShortDateString()</p>
-            <p>@review.Text</p>
+
         }
     </div>
 </div>
