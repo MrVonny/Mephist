@@ -13,41 +13,47 @@
 <span>* - обязательны для заполнения</span>
 <form method="post" id="add-material-form" asp-controller="EducationalMaterials" asp-action="AddMaterial" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="form-group"></div>
-    <div class="form-group mb-3">
-        <label asp-for="Type"></label>*
-        <select class="form-control" id="typeInput" asp-for="Type" asp-items="ViewBag.Types">
-            <option value="">Выберите тип</option>
-        </select>
-        <span asp-validation-for="Type" class="text-danger"></span>
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Name"></label>*
-        <input class="form-control" asp-for="Name" />
-        <span asp-validation-for="Name"></span>
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Description"></label>
-        <textarea class="form-control" style="min-height: 5em" asp-for="Description"></textarea>
-        <span asp-validation-for="Description"></span>
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="EmployeeFullName"></label>*
-        <input class="form-control employee-input" asp-for="EmployeeFullName" />
-        <span asp-validation-for="EmployeeFullName"></span>
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Subject"></label>*
-        <input class="form-control subject-input" asp-for="Subject" />
-        <span asp-validation-for="Subject"></span>
-    </div>
-
-
-    <div id="labJournalInput" style="display: none">
+    <!--Тип-->
+    <div id="type_block">
         <div class="form-group mb-3">
-            <label asp-for="Semester"></label>
-            <input class="form-control" asp-for="Semester" />
-            <span asp-validation-for="Semester"></span>
+            <label asp-for="Type"></label>
+            <select class="form-control" asp-for="Type" asp-items="ViewBag.Types">
+                <option value="">Выберите тип</option>
+            </select>
+            <span asp-validation-for="Type" class="text-danger"></span>
         </div>
+    </div>
+
+    <div id="subject_block" style="display: none">
+        <div class="form-group mb-3">
+            <label asp-for="Subject"></label>*
+            <input class="form-control" asp-for="Subject" />
+            <span asp-validation-for="Subject"></span>
+        </div>
+    </div>
+
+    <div id="general_block" style="display: none">
+        <div class="form-group mb-3">
+            <label asp-for="Name"></label>*
+            <input class="form-control" asp-for="Name" />
+            <span asp-validation-for="Name"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="Description"></label>
+            <textarea class="form-control" style="min-height: 5em" asp-for="Description"></textarea>
+            <span asp-validation-for="Description"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="EmployeeFullName"></label>*
+            <input class="form-control employee-input" asp-for="EmployeeFullName" />
+            <span asp-validation-for="EmployeeFullName"></span>
+        </div>
+
+    </div>
+    
+
+
+    <div id="laboratory_block" style="display: none">
         <div class="form-group mb-3">
             <label asp-for="Work"></label>
             <input class="form-control" asp-for="Work" />
@@ -64,54 +70,57 @@
             <span asp-validation-for="Mark"></span>
         </div>
         <input name="query" hidden id="query" type="text" />
-
     </div>
-    <div class="mb-3">
-        <label id="uploads-label">Файлы</label>
-        <input class="form-control" id="uploads" accept="image/*" type="file" name="uploads" multiple />
-    </div>
-    <span class="text-info">Расставьте файлы в нужном порядке</span>
-    <style>
 
-        #uploads-preview {
-            height: auto;
-            margin: 0;
-            padding: 0;
-        }
-
-            #uploads-preview div {
-                max-height: 300px;
-                text-align: center;
-            }
-
-        .img-thumbnail {
-            max-height: 250px;
-            width: 100%;
-        }
-
-        .thumb-name {
-            font-size: 14px;
-        }
-
-        .ghost {
-            opacity: 0.5;
-            background: #00d9ff;
-        }
-
-            .ghost > img {
-                opacity: 0;
-            }
-
-            .ghost > span {
-                opacity: 0;
-            }
-    </style>
-    <div class="w-100 my-2">
-        <div id="uploads-preview" class="container row">
+    <div id="upload_block" style="display: none">
+        <div class="mb-3">
+            <label id="uploads-label">Файлы</label>
+            <input class="form-control" id="uploads" accept="image/*" type="file" name="uploads" multiple />
         </div>
-    </div>
+        <span class="text-info">Расставьте файлы в нужном порядке</span>
+        <style>
 
-    <button type="submit" class="btn btn-primary my-2">Добавить</button>
+            #uploads-preview {
+                height: auto;
+                margin: 0;
+                padding: 0;
+            }
+
+                #uploads-preview div {
+                    max-height: 300px;
+                    text-align: center;
+                }
+
+            .img-thumbnail {
+                max-height: 250px;
+                width: 100%;
+            }
+
+            .thumb-name {
+                font-size: 14px;
+            }
+
+            .ghost {
+                opacity: 0.5;
+                background: #00d9ff;
+            }
+
+                .ghost > img {
+                    opacity: 0;
+                }
+
+                .ghost > span {
+                    opacity: 0;
+                }
+        </style>
+        <div class="w-100 my-2">
+            <div id="uploads-preview" class="container row">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary my-2">Добавить</button>
+    </div>
+    
 </form>
 
 @section scripts{

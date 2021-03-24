@@ -1,7 +1,7 @@
 ﻿@model Mephist.Models.Employee
 @using Mephist.Models.Enums
 @{
-    ViewData["Title"] = "SmallProfile"; 
+    ViewData["Title"] = "SmallProfile";
     int exmasTicketsCount = Model.EducationalMaterials.Where(em => em.Type == EducationalMaterialType.ExamTickets).Count();
     int homeworkCount = Model.EducationalMaterials.Where(em => em.Type == EducationalMaterialType.Homework).Count();
     int labCount = Model.EducationalMaterials.Where(em => em.Type == EducationalMaterialType.LaboratoryJournal).Count();
@@ -12,75 +12,40 @@
 
 }
 
-<tr>
-    <td>
-        <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.Id">@Model.FullName</a>
-        <br />
-        <img src="@Url.Content(Model.GetAvatarPath())" style="height: 200px; " />
+<div style="" class="small-profile container-fluid row border-top">
+    <div class="col-md-12 col-xl-4 ">
+        <a class="nav-link" asp-controller="Employee" asp-action="Details" asp-route-id="@Model.Id">
+            <div class="d-flex flex-column">
+                <span class="fs-4 text-center">@Model.FullName</span>
+                @foreach (var position in Model.Positions)
+                {
+                    <span class="text-secondary fst-italic text-center">@position</span>
+                }
 
-    </td>
-    <td>
-        @foreach (var position in Model.Positions)
-        {
-            <p>@position</p>
-        }
-    </td>
-    <td>
+                <div class="d-flex justify-content-center">
+                    <img class="img-thumbnail" src="@Url.Content(Model.GetAvatarPath())" style="height: 210px; " />
+                </div>
+
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4 col-xl-2">
+        <p><strong class="text-center">Кафедры</strong></p>
         @foreach (var department in Model.Departments)
         {
-            <p>@department</p>
+            <span>@department</span><br />
         }
-    </td> 
-    <td>
-        @if (Model.Subjects!=null) foreach (var subjects in Model.Subjects)
-        {
-            <p>@subjects</p>
-        }
-    </td>
-    <td>
-        <!--
-            <ul class="list-group list-group-flush">
-            @if (exmasTicketsCount > 0)
+    </div>
+    <div class="col-md-4 col-xl-2">
+        <p><strong class="text-center">Дисциплины</strong></p>
+        @if (Model.Subjects != null) foreach (var subjects in Model.Subjects)
             {
-                <li class="list-group-item"><a href="#">Билеты (@exmasTicketsCount)</a></li>
+                <span>@subjects</span><br />
             }
-            @if (homeworkCount > 0)
-            {
-                <li class="list-group-item">
-                    <a href="#">ДЗ (@homeworkCount)</a>
-                </li>
-            }
-            @if (labCount > 0)
-            {
-                <li class="list-group-item"> <a href="#">Лабараторные работы (@labCount)</a></li>
-            }
-            @if (lecturesCount > 0)
-            {
-                <li class="list-group-item">
-                    <a href="#">Лекции (@lecturesCount)</a>
-                </li>
-            }
-            @if (sprusCount > 0)
-            {
-                <li class="list-group-item">
-                    <a href="#">Шпоры (@sprusCount)</a>
-                </li>
-            }
-            @if (termPapersCount > 0)
-            {
-                <li class="list-group-item">
-                    <a href="#">Курсовые работы (@termPapersCount)</a>
-                </li>
-            }
-            @if (otherCount > 0)
-            {
-                <li class="list-group-item">
-                    <a href="#">Другое (@otherCount)</a>
-                </li>
-            }
-        </ul>
-        -->
-        <div class="row container">
+    </div>
+    <div class="col-md-4 col-xl-4">
+        <p><strong class="text-center">Учебные материалы</strong></p>
+        <div class="container">
             @if (exmasTicketsCount > 0)
             {
                 <div class="col-12 col-lg-6"><a href="#">Билеты (@exmasTicketsCount)</a></div>
@@ -119,9 +84,13 @@
                     <a href="#">Другое (@otherCount)</a>
                 </div>
             }
+            @if(Model.EducationalMaterials.Count==0)
+            {
+                <span>Ничего нет :(</span><br />
+                <a asp-controller="EducationalMaterials" asp-action="AddMaterial">
+                    <span>Добавить</span>
+                </a>
+            }
         </div>
-    </td>
-    <td>
-        <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.Id">Читать отзывы</a>
-    </td>
-</tr>
+    </div>
+</div>

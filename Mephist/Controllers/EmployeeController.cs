@@ -52,6 +52,7 @@ namespace Mephist.Controllers
             return View();
         }
 
+
         [HttpGet]
         public IActionResult Details(int? id)
         {
@@ -100,11 +101,7 @@ namespace Mephist.Controllers
             return RedirectToAction("Details", new { id = model.EmployeeId });
         }
 
-        [HttpGet]
-        public JsonResult AutocompleteSearch()
-        {
-            return Json(_repository.GetEmployees().Select(em =>new { value = em.FullName }));
-        }
+        
 
         [HttpDelete]
         [Authorize(Roles = "admin")]

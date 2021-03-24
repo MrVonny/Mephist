@@ -34,7 +34,7 @@ namespace Mephist.Services
             */
             var client = new SmtpClient("smtp.mailtrap.io", 2525)
             {
-                Credentials = new NetworkCredential("14ca2da2ab88b9", "0fddbb9a316962"),
+                Credentials = new NetworkCredential("108cafddb3d645", "b7d219e0136730"),
                 EnableSsl = true
             };
             //client.Send("from@example.com", "to@example.com", "Hello world", "testbody");

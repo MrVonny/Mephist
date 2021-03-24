@@ -21,8 +21,8 @@ namespace Mephist.Models
         [Column(TypeName = "nvarchar(50)")]
         public string FullName { get; set; }      
         public List<string> Positions { get; set; }
-        public List<string> Departments { get; set; }    
-        public List<string> Subjects { get; set; }
+        public List<string> Departments { get; set; }
+        public List<string> Subjects { get; set; } 
         public virtual List<EducationalMaterial> EducationalMaterials { get; set; } = new List<EducationalMaterial>();
         public virtual List<Review> Reviews { get; set; } = new List<Review>();
         public virtual List<Media> Photos { get; set; } = new List<Media>();

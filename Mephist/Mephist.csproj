@@ -35,7 +35,6 @@
     <Folder Include="wwwroot\assets\" />
     <Folder Include="wwwroot\bundles\" />
     <Folder Include="wwwroot\Content\" />
-    <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\vendor\" />
   </ItemGroup>
 

@@ -46,15 +46,24 @@ namespace Mephist.Controllers
 
             if (model.Work == null)
                 ModelState.AddModelError("Work", "Введите название работы");
+            /*
             if (model.Year == null)
                 ModelState.AddModelError("Year", "Введите год выполнения работы");
-            if (model.Semester == null)
-                ModelState.AddModelError("Semester", "Введите семестр выполнения работы");
             if (model.Mark == null)
                 ModelState.AddModelError("Mark", "Ввеодите оценку за работу");
-
+            */
             if (uploads.Count <= 0)
                 ModelState.AddModelError("Files", "Не загржен ни один файл");
+            
+            try
+            {
+                model.Semester = _universityStaticData.GetSemestrBySubject(model.Subject);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("Work", "Нет такой работы");
+            }
+                
 
             if (ModelState.IsValid)
             {
@@ -67,10 +76,8 @@ namespace Mephist.Controllers
                     Type = model.Type,
                     Materials = medias,
 
-                    Mark = model.Mark ?? throw new ArgumentNullException(),
                     Semester = model.Semester ?? throw new ArgumentNullException(),
                     Work = model.Work ?? throw new ArgumentNullException(),
-                    Year = model.Year ?? throw new ArgumentNullException()
                 };
                 _repository.CreateLaboratoryJournal(lj);
 

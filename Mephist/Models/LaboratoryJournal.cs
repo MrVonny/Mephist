@@ -17,11 +17,9 @@ namespace Mephist.Models
         [Required]
         [Range(1,4)]
         public virtual int Semester { get; set; }
-        [Required]
         [Range(1990,2021)]
-        public virtual int Year { get; set; }
+        public virtual int? Year { get; set; }
         [Range(0,100)]
-        [Required]
-        public virtual int Mark { get; set; }
+        public virtual int? Mark { get; set; }
     }
 }

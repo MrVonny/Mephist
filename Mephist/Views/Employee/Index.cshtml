@@ -16,25 +16,16 @@
 <div class="container justify-content-center">
     @await Component.InvokeAsync("PageNavigation", new { action = "Index", controller = "Employee", page = ViewBag.Page, maxPage = ViewBag.MaxPage })
 </div>
-<table class="table">
-    <thead>
-        <tr>
-            <td><b>ФИО</b></td>
-            <td><b>Должности</b></td>
-            <td><b>Кафедры</b></td>
-            <td><b>Предметы</b></td>
-            <td><b>Учебные материалы</b></td>          
-        </tr>
-    </thead>
+<div class="table">
 
-    <tbody>
-        @foreach (Employee employee in ViewBag.EmployeesList)
-        {
-            @await Component.InvokeAsync("EmployeeProfile", employee);
-        }
-    </tbody>
-</table>
-<div class="container justify-content-center" >
+
+    @foreach (Employee employee in ViewBag.EmployeesList)
+    {
+        @await Html.PartialAsync("_smallProfile", employee);
+    }
+
+</div>
+<div class="container justify-content-center">
     @await Component.InvokeAsync("PageNavigation", new { action = "Index", controller = "Employee", page = ViewBag.Page, maxPage = ViewBag.MaxPage })
 </div>
 

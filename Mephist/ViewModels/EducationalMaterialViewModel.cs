@@ -16,7 +16,7 @@ namespace Mephist.ViewModels
 
         [Display(Name = "Название")]
         [Required(ErrorMessage ="Введите название")]
-        [StringLength(50, ErrorMessage = "Не более 50 сиволов")]
+        [StringLength(200, ErrorMessage = "Не более 250 символов")]
         public string Name { get; set; }
             
         [Display(Name = "Описание")]

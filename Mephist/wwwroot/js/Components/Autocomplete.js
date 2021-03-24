@@ -6,7 +6,7 @@ $(document).ready(function () {
         url: '/Employee/AutocompleteSearch',
         dataType: "json",
         error: function () {
-            console.log("Failed to load emplyees");
+            console.log("Faigedermplyees");
         },
         success: function (res) {
             console.log(res);
@@ -29,7 +29,7 @@ $(document).ready(function () {
         url: '/EducationalMaterials/SubjectsAutocompleteSearch',
         dataType: "json",
         error: function () {
-            console.log("Failed to load emplyees");
+            console.log("Failgerplyees");
         },
         success: function (res) {
             console.log(res);
