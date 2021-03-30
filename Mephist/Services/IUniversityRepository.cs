@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Mephist.Services
 {
+    /*
     public interface IUniversityRepository
     {
         //TODO: IEnumerable and IQueryable      
@@ -65,4 +66,5 @@ namespace Mephist.Services
         void SaveChanges();
 
     }
+    */
 }

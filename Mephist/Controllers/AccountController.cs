@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mephist.Services;
+using Mephist.Services.DAL;
 using Mephist.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -16,14 +17,15 @@ namespace Mephist.Controllers
     
     public class AccountController : Controller
     {
-        private IUniversityRepository _repository;
+        //private IUniversityRepository _repository;
+        private UniversityData universityData;
         private IWebHostEnvironment _webHost;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public AccountController(IUniversityRepository repository, IWebHostEnvironment webHost, UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UniversityData universityData, IWebHostEnvironment webHost, UserManager<User> userManager, SignInManager<User> signInManager)
         {
-            _repository = repository;
+            this.universityData = universityData;
             _webHost = webHost;
             _userManager = userManager;
             _signInManager = signInManager;

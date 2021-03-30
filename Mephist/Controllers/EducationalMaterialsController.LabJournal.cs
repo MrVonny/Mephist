@@ -24,9 +24,9 @@ namespace Mephist.Controllers
     public partial class EducationalMaterialsController : Controller
     {
 
-        public IActionResult GetLabJournals()
+        public async Task<IActionResult> GetLabJournals()
         {
-            var model = _repository.GetLaboratoryJournals();
+            var model = await universityData.LaboratoryJournals.GetAsync();
             return View(model);
         }
 
@@ -35,23 +35,14 @@ namespace Mephist.Controllers
         public async Task<IActionResult> AddLabJournal(EducationalMaterialViewModel model, string query, IFormFileCollection uploads)
         {
             List<Media> medias = new List<Media>();
-            try
-            {
-                Employee employee = _repository.GetEmployee(model.EmployeeFullName);
-            }
-            catch (Exception)
-            {
-                ModelState.AddModelError("FullName", "Преподаватель не найден");
-            }
 
+                Employee employee = await universityData.Employees.GetByFullNameAsync(model.EmployeeFullName);
+            if(employee==null)
+                ModelState.AddModelError("FullName", "Преподаватель не найден");
+            
             if (model.Work == null)
                 ModelState.AddModelError("Work", "Введите название работы");
-            /*
-            if (model.Year == null)
-                ModelState.AddModelError("Year", "Введите год выполнения работы");
-            if (model.Mark == null)
-                ModelState.AddModelError("Mark", "Ввеодите оценку за работу");
-            */
+
             if (uploads.Count <= 0)
                 ModelState.AddModelError("Files", "Не загржен ни один файл");
             
@@ -70,7 +61,7 @@ namespace Mephist.Controllers
                 LaboratoryJournal lj = new LaboratoryJournal()
                 {
                     Name = model.Name,
-                    Employee = _repository.GetEmployee(model.EmployeeFullName),
+                    Employee = await universityData.Employees.GetByFullNameAsync(model.EmployeeFullName),
                     Description = model.Description,
                     Subject = model.Subject,
                     Type = model.Type,
@@ -78,8 +69,10 @@ namespace Mephist.Controllers
 
                     Semester = model.Semester ?? throw new ArgumentNullException(),
                     Work = model.Work ?? throw new ArgumentNullException(),
+                    Mark = model.Mark,
+                    Year = model.Year
                 };
-                _repository.CreateLaboratoryJournal(lj);
+                await universityData.LaboratoryJournals.AddAsync(lj);
 
                 string patrialPath = "Content/EducationalMaterials/" + String.Format("{0}_{1}",
                     DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss"), model.Name.Transliterate());
@@ -101,8 +94,9 @@ namespace Mephist.Controllers
 
                 foreach (var media in medias)
                     media.EducationalMaterial = lj;
-                _repository.CreateMediaRange(medias);
-                _repository.SaveChanges();
+                foreach (var media in medias)
+                   await universityData.Medias.AddAsync(media);
+                universityData.SaveAsync();
 
                 return RedirectToAction("GetMaterials", "EducationalMaterials");
             }

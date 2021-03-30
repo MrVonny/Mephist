@@ -1,4 +1,5 @@
 ﻿using Mephist.Services;
+using Mephist.Services.DAL;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -13,24 +14,24 @@ namespace Mephist.Controllers
     [ApiController]
     public class UniversityController : ControllerBase
     {
-        private readonly IUniversityRepository _repository;
+        private readonly UniversityData universityData;
         private readonly IHostEnvironment _environment;
         private readonly UniversityStaticData _universityStaticData;
 
-        public UniversityController(IUniversityRepository repository, IHostEnvironment environment, UniversityStaticData universityStaticData)
+        public UniversityController(UniversityData universityData, IHostEnvironment environment, UniversityStaticData universityStaticData)
         {
-            _repository = repository;
+            this.universityData = universityData;
             _environment = environment;
             _universityStaticData = universityStaticData;
         }
 
         [HttpGet]
         [Route("employees")]
-        public ActionResult GetEmployees(string subject)
+        public async Task<ActionResult> GetEmployees(string subject)
         {
             try
             {
-                var employees = _repository.GetEmployees();
+                var employees = await universityData.Employees.GetAsync();
                 if (!string.IsNullOrEmpty(subject))
                     employees = employees.Where(e => (e.Subjects ?? new List<string>()).Contains(subject));
                 return Ok(employees.Select(e=>e.FullName));

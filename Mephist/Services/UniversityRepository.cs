@@ -12,6 +12,7 @@ using DuoVia.FuzzyStrings;
 
 namespace Mephist.Services
 {
+    /*
     public class UniversityRepository : IUniversityRepository
     {
         private readonly UniversityContext _context;
@@ -297,4 +298,6 @@ namespace Mephist.Services
 
         
     }
+
+    */
 }

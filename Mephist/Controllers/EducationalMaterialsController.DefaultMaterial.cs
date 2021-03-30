@@ -25,7 +25,7 @@ namespace Mephist.Controllers
 {
     public partial class EducationalMaterialsController : Controller
     {
-        public IActionResult GetMaterials(string name, string employee, string lectures, string homeworks, string cheatsSheats, string labs, string tickets, string courseworks, string others)
+        public async Task<IActionResult> GetMaterials(string name, string employee, string lectures, string homeworks, string cheatsSheats, string labs, string tickets, string courseworks, string others)
         {
             List<EducationalMaterialType> types = new List<EducationalMaterialType>();
             
@@ -45,17 +45,17 @@ namespace Mephist.Controllers
                 types.Add(EducationalMaterialType.Other);
             
 
-            IQueryable<EducationalMaterial> list = _repository.GetEducationalMaterials().AsQueryable();
+            IEnumerable<EducationalMaterial> list = await universityData.EducationalMaterials.GetAsync();
             if(types.Count>0)
                 list = list.Where(em => types.Contains(em.Type));
             if (!String.IsNullOrEmpty(employee))
             {
-                var employees = _repository.GetEmployeesFuzzy(employee);
+                var employees = await universityData.Employees.GetEmployeesFuzzyAsync(employee);
                 list = list.Where(em => employees.Contains(em.Employee));
             }
             if (!String.IsNullOrEmpty(name))
             {
-                var materials = _repository.GetEducationalMaterialsFuzzy(name, Fuzz.PartialRatio);
+                var materials = (await universityData.EducationalMaterials.GetEducationalMaterialsFuzzyAsync(name)).ToList();
                 list = list.Where(em=>materials.Contains(em));
             }
 
@@ -68,15 +68,10 @@ namespace Mephist.Controllers
         [HttpPost]
         public async Task<IActionResult> AddMaterial(EducationalMaterialViewModel model, IFormFileCollection uploads)
         {
-            try
-            {
-                Employee employee = _repository.GetEmployee(model.EmployeeFullName);
-            }
-            catch (Exception)
-            {
+            Employee employee = await universityData.Employees.GetByFullNameAsync(model.EmployeeFullName);
+            if (employee == null)
                 ModelState.AddModelError("FullName", "Преподаватель не найден");
 
-            }
             if (uploads.Count <= 0) ModelState.AddModelError("Files", "Не загржен ни один файл");
 
             List<Media> medias = new List<Media>();
@@ -89,13 +84,13 @@ namespace Mephist.Controllers
                 EducationalMaterial em = new EducationalMaterial()
                 {
                     Name = model.Name,
-                    Employee = _repository.GetEmployee(model.EmployeeFullName),
+                    Employee = await universityData.Employees.GetByFullNameAsync(model.EmployeeFullName),
                     Description = model.Description,
                     Subject = model.Subject,
                     Type = model.Type,
                     Materials = medias
                 };
-                _repository.CreateEducationalMaterial(em);
+                await universityData.EducationalMaterials.AddAsync(em);
 
 
                 string patrialPath = "Content/EducationalMaterials/" + String.Format("{0}_{1}",
@@ -118,8 +113,9 @@ namespace Mephist.Controllers
 
                 foreach (var media in medias)
                     media.EducationalMaterial = em;
-                _repository.CreateMediaRange(medias);
-                _repository.SaveChanges();
+                foreach (var media in medias)
+                    await universityData.Medias.AddAsync(media);
+                universityData.SaveAsync();
 
                 return RedirectToAction("GetMaterials", "EducationalMaterials");
             }

@@ -28,7 +28,7 @@ namespace Mephist.Algorithms
             public static readonly string Photo = @"//img[@class='user-responsive']";
         }
 
-        private static readonly string letters = "АБВГДЕЁЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ";
+        private static readonly string letters = "А";//"АБВГДЕЁЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ";
         private static readonly string path = "https://home.mephi.ru";
 
         private readonly IWebHostEnvironment _webHost;
@@ -118,7 +118,7 @@ namespace Mephist.Algorithms
                     {
                         string savePath = $"Content/Employees/{employee.FullName.Transliterate(true)}";
                         var name = url.Split('/').Last().Split('.').First().Transliterate(true);
-                        name = $"Avatar_{DateTime.Now.ToLongDateString()}.{extension}";
+                        name = $"Avatar_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}.{extension}";
                         Directory.CreateDirectory(Path.Combine(_webHost.WebRootPath, savePath));
                         webClient.DownloadFile(url, Path.Combine(_webHost.WebRootPath, savePath, name));
 
@@ -127,7 +127,7 @@ namespace Mephist.Algorithms
                             PartialMediaPath = savePath,
                             MediaName = name,
                             CreatedDate = DateTime.Now,
-                            ContentType = MimeTypesMap.GetMimeType(name)
+                            ContentType = MimeTypesMap.GetMimeType(name),
                         };
 
                         employee.Photos = new List<Media> { photo };

@@ -32,7 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\DAL\" />
     <Folder Include="wwwroot\assets\" />
     <Folder Include="wwwroot\bundles\" />
     <Folder Include="wwwroot\Content\" />

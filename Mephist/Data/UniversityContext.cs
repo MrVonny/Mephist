@@ -22,7 +22,6 @@ namespace Mephist.Data
         public UniversityContext(DbContextOptions<UniversityContext> options) : base(options)
         {
             
-            //Database.EnsureCreated();
 
         }
 
@@ -56,6 +55,12 @@ namespace Mephist.Data
             (c1, c2) => c1.SequenceEqual(c2),
             c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
             c => c.ToList()));
+
+            modelBuilder.Entity<Media>()
+                .HasOne(m => m.EducationalMaterial)
+                .WithMany(m => m.Materials)
+                .OnDelete(DeleteBehavior.SetNull);
+
         }
         public DbSet<Institute> Institutions { get; set; }
         public DbSet<Department> Departments { get; set; }

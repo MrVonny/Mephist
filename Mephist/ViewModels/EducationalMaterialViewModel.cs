@@ -35,10 +35,8 @@ namespace Mephist.ViewModels
         [Display(Name = "Семестр")]       
         public virtual int? Semester { get; set; }
         [Display(Name = "Год")]       
-        [Range(1990,2030, ErrorMessage = "Укажите реальную дату")]
         public virtual int? Year { get; set; }
-        [Display(Name = "Оценка")]
-        [Range(60, 100, ErrorMessage = "Оценка может быть от 60 до 100 баллов")]        
+        [Display(Name = "Оценка")]     
         public virtual int? Mark { get; set; }
 
 

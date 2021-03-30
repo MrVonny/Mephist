@@ -10,6 +10,7 @@ using Mephist.Data;
 using Mephist.Extensions;
 using Mephist.Models;
 using Mephist.Services;
+using Mephist.Services.DAL;
 using Mephist.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -24,13 +25,22 @@ namespace Mephist.Controllers
     public partial class EducationalMaterialsController : Controller
     {
 
-        private readonly IUniversityRepository _repository;
+        private readonly UniversityData universityData;
         private readonly IWebHostEnvironment _webHost;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly UniversityStaticData _universityStaticData;
 
-        readonly List<SelectListItem> Types = new List<SelectListItem>()
+        readonly List<SelectListItem> Types;
+
+        public EducationalMaterialsController(UniversityData universityData, IWebHostEnvironment webHost, UserManager<User> userManager, SignInManager<User> signInManager, UniversityStaticData universityStaticData)
+        {
+            this.universityData = universityData;
+            _webHost = webHost;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _universityStaticData = universityStaticData;
+            Types = new List<SelectListItem>()
             {
                 new SelectListItem("Другое","-1"),
                 new SelectListItem("Лекции","1"),
@@ -40,21 +50,11 @@ namespace Mephist.Controllers
                 new SelectListItem("Билеты","5"),
                 new SelectListItem("Курсовая работа","6")
             };
-
-        public EducationalMaterialsController(IUniversityRepository repository, IWebHostEnvironment webHost,
-                                              UserManager<User> userManager, SignInManager<User> signInManager,
-                                              UniversityStaticData universityStaticData)
-        {
-            _universityStaticData = universityStaticData;
-            _repository = repository;
-            _webHost = webHost;
-            _userManager = userManager;
-            _signInManager = signInManager;
         }
-   
-        public IActionResult Download(int id)
+
+        public async Task<IActionResult> Download(int id)
         {
-            EducationalMaterial em = _repository.GetEducationalMaterial(id);
+            EducationalMaterial em = await universityData.EducationalMaterials.GetByIdAsync(id);
             List<Media> materials = em.Materials;
             List<byte[]> files = new List<byte[]>();
             byte[] compressed;
@@ -99,12 +99,12 @@ namespace Mephist.Controllers
 
         }
 
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id is null)
                 return StatusCode(400);
 
-            LaboratoryJournal lj = _repository.GetLaboratoryJournal(id);
+            LaboratoryJournal lj = await universityData.LaboratoryJournals.GetByIdAsync(id.Value);
 
             return View(lj);
         }
@@ -113,12 +113,12 @@ namespace Mephist.Controllers
         [Authorize(Roles = "admin")]
         //ToDo:
         //Убрать returnUrl и сделать удаление через AJAX.
-        public IActionResult Delete(int? id, string returnUrl)
+        public async Task<IActionResult> Delete(int? id, string returnUrl)
         {
             if (id is null)
                 return StatusCode(400);
-            _repository.DeleteEducationalMaterial(id);
-            _repository.SaveChanges();
+            universityData.EducationalMaterials.Remove(await universityData.EducationalMaterials.GetByIdAsync(id.Value));
+            universityData.SaveAsync();
             return RedirectToAction("GetMaterials");
         }
 

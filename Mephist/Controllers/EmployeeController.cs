@@ -14,33 +14,35 @@ using Microsoft.Extensions.Hosting;
 using FuzzySharp;
 using System.Diagnostics;
 using HeyRed.Mime;
+using Mephist.Services.DAL;
 
 namespace Mephist.Controllers
 {
     public class EmployeeController : Controller
     {
 
-        private readonly IUniversityRepository _repository;
+        private readonly UniversityData universityData;
         private readonly IHostEnvironment _environment;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public EmployeeController(IUniversityRepository repository, IHostEnvironment environment, UserManager<User> userManager, SignInManager<User> signInManager)
+        public EmployeeController(UniversityData universityData, IHostEnvironment environment, UserManager<User> userManager, SignInManager<User> signInManager)
         {
-            _repository = repository;
+            this.universityData = universityData;
             _environment = environment;
             _userManager = userManager;
             _signInManager = signInManager;
         }
 
         
-        public IActionResult Index(string search, int page = 1, int onPage=30)
+        public async Task<IActionResult> Index(string search, int page = 1, int onPage=30)
         {
             List<Employee> employees;
+            
             if (search==null)
-                employees = _repository.GetEmployees().OrderBy(x=>x.FullName).ToList();
+                employees = (await universityData.Employees.GetAsync()).OrderBy(x=>x.FullName).ToList();
             else
-                employees = _repository.GetEmployeesFuzzy(search).ToList();
+                employees = (await universityData.Employees.GetEmployeesFuzzyAsync(search)).ToList();
 
             
             
@@ -54,11 +56,11 @@ namespace Mephist.Controllers
 
 
         [HttpGet]
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id is null) 
                 return StatusCode(400);
-            Employee model = _repository.GetEmployee(id);            
+            Employee model = await universityData.Employees.GetByIdAsync(id.Value);            
             return View(model);
         }
 
@@ -88,15 +90,15 @@ namespace Mephist.Controllers
                 Review review = new Review()
                 {
                     CreatedDate = DateTime.Now,
-                    Employee = _repository.GetEmployee(model.EmployeeId),
+                    Employee = await universityData.Employees.GetByIdAsync(model.EmployeeId),
                     Text = model.Text,
                     Anonymously = model.Anonymously
                 };
                 if (!model.Anonymously)
                     review.User = await _userManager.GetUserAsync(User);
 
-                _repository.CreateReview(review);
-                _repository.SaveChanges();
+                await universityData.Reviews.AddAsync(review);
+                universityData.SaveAsync();
             }
             return RedirectToAction("Details", new { id = model.EmployeeId });
         }
@@ -106,21 +108,26 @@ namespace Mephist.Controllers
         [HttpDelete]
         [Authorize(Roles = "admin")]
         [Route("Delete")]
-        public void Delete(int? id)
+        public async void Delete(int? id)
         {
-            _repository.DeleteEmployee(id);
+            if (id != null)
+            {
+                universityData.Employees.Remove(await universityData.Employees.GetByIdAsync(id.Value));
+                universityData.SaveAsync();
+            }
+                
         }
 
         [HttpPost]
         [Authorize(Roles = "admin")]
         //ToDo:
         //Убрать returnUrl и сделать удаление через AJAX.
-        public IActionResult Delete(int? id, string returnUrl)
+        public async Task<IActionResult> Delete(int? id, string returnUrl)
         {
             if (id is null)
                 return StatusCode(400);
-            _repository.DeleteReview(id);
-            _repository.SaveChanges();
+            universityData.Reviews.Remove(await universityData.Reviews.GetByIdAsync(id.Value));
+            universityData.SaveAsync();
             return RedirectToAction("GetMaterials");
         }
 

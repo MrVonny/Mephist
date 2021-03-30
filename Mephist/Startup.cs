@@ -15,7 +15,7 @@ using System.Security.Claims;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using AspNet.Security.OAuth.Vkontakte;
-
+using Mephist.Services.DAL;
 
 namespace Mephist
 {
@@ -31,7 +31,8 @@ namespace Mephist
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentity<User, IdentityRole>(options => {
+            services.AddIdentity<User, IdentityRole>(options =>
+            {
                 options.SignIn.RequireConfirmedAccount = true;
                 options.SignIn.RequireConfirmedEmail = true;
                 options.User.RequireUniqueEmail = true;
@@ -39,20 +40,21 @@ namespace Mephist
             }).AddEntityFrameworkStores<UniversityContext>()
               .AddDefaultTokenProviders();
 
-            services.AddTransient<IUniversityRepository, UniversityRepository>();
+            services.AddTransient<UniversityData>();
+            //services.AddTransient<IUniversityRepository, UniversityRepository>();
             services.AddDbContext<UniversityContext>(options =>
                     options.UseLazyLoadingProxies().UseSqlite(Configuration.GetConnectionString("SQLite")));
 
             services.Configure<IdentityOptions>(option =>
             {
-                
-                
-                
+
+
+
             });
 
             services.ConfigureApplicationCookie(options =>
             {
-                
+
             });
 
             services.AddAuthentication()
@@ -85,23 +87,13 @@ namespace Mephist
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.UseFileServer(new FileServerOptions()
-            {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(env.ContentRootPath, "node_modules")
-                ),
-                RequestPath = "/node_modules",
-                EnableDirectoryBrowsing = false
-            });
-
 
             app.UseRouting();
 
-
             app.UseAuthentication();
             app.UseAuthorization();
-            
-            
+
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

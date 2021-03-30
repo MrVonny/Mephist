@@ -16,11 +16,14 @@
     <!--Тип-->
     <div id="type_block">
         <div class="form-group mb-3">
-            <label asp-for="Type"></label>
+            <label asp-for="Type"></label>*
             <select class="form-control" asp-for="Type" asp-items="ViewBag.Types">
                 <option value="">Выберите тип</option>
             </select>
             <span asp-validation-for="Type" class="text-danger"></span>
+            <div class="invalid-feedback">
+                Выберите тип
+            </div>
         </div>
     </div>
 
@@ -29,6 +32,9 @@
             <label asp-for="Subject"></label>*
             <input class="form-control" asp-for="Subject" />
             <span asp-validation-for="Subject"></span>
+            <div class="invalid-feedback">
+                Выберите предмет из списка
+            </div>
         </div>
     </div>
 
@@ -37,6 +43,9 @@
             <label asp-for="Name"></label>*
             <input class="form-control" asp-for="Name" />
             <span asp-validation-for="Name"></span>
+            <div class="invalid-feedback">
+                Введите название
+            </div>
         </div>
         <div class="form-group mb-3">
             <label asp-for="Description"></label>
@@ -47,7 +56,11 @@
             <label asp-for="EmployeeFullName"></label>*
             <input class="form-control employee-input" asp-for="EmployeeFullName" />
             <span asp-validation-for="EmployeeFullName"></span>
+            <div class="invalid-feedback">
+                Выберите преподавателя из списка
+            </div>
         </div>
+        
 
     </div>
     
@@ -55,14 +68,20 @@
 
     <div id="laboratory_block" style="display: none">
         <div class="form-group mb-3">
-            <label asp-for="Work"></label>
+            <label asp-for="Work"></label>*
             <input class="form-control" asp-for="Work" />
             <span asp-validation-for="Work"></span>
+            <div class="invalid-feedback">
+                Выберите работу из списка
+            </div>
         </div>
         <div class="form-group mb-3">
             <label asp-for="Year"></label>
             <input class="form-control" asp-for="Year" />
             <span asp-validation-for="Year"></span>
+            <div class="invalid-feedback">
+                Введите реальный год
+            </div>
         </div>
         <div class="form-group mb-3">
             <label asp-for="Mark"></label>
@@ -76,7 +95,11 @@
         <div class="mb-3">
             <label id="uploads-label">Файлы</label>
             <input class="form-control" id="uploads" accept="image/*" type="file" name="uploads" multiple />
+            <div class="invalid-feedback">
+                Добавьте файлы
+            </div>
         </div>
+
         <span class="text-info">Расставьте файлы в нужном порядке</span>
         <style>
 

@@ -2,6 +2,7 @@
 using Mephist.Data;
 using Mephist.Models;
 using Mephist.Services;
+using Mephist.Services.DAL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +16,12 @@ namespace Mephist.Controllers
     [Authorize(Roles = "admin")]
     public class AdminPanelController : Controller
     {
-        private readonly IUniversityRepository _repository;
+        private readonly UniversityData universityData;
         private readonly IWebHostEnvironment _webHost;
 
-        public AdminPanelController(IUniversityRepository repository, IWebHostEnvironment webHost)
+        public AdminPanelController(UniversityData universityData, IWebHostEnvironment webHost)
         {          
-            _repository = repository;
+            this.universityData = universityData;
             _webHost = webHost;
         }
 
@@ -30,31 +31,31 @@ namespace Mephist.Controllers
         }
 
         [HttpPost]
-        public IActionResult SynchronizeEmployees()
+        public async Task<IActionResult> SynchronizeEmployees()
         {
             try
             {
                 EmployeeParser parser = new EmployeeParser(_webHost);
                 var employees = parser.GetEmployees();
-                Parallel.ForEach(employees, (emp) =>
+                Parallel.ForEach(employees,  (emp) =>
                 {
-                    Parallel.ForEach(emp.Photos, (photo) =>
+                    Parallel.ForEach(emp.Photos,  (photo) =>
                     {
                         IEnumerable<Media> medias;
-                        lock (_repository)
-                            medias = _repository.GetMedia();
+                        lock (universityData)
+                            medias = universityData.Medias.GetAsync().Result;
                         Media media = null;
                         try
                         {
-                            media = medias.Single(o =>
+                            media = medias.SingleOrDefault(o =>
                                     o.EmployeeId.Equals(photo.EmployeeId) &&
                                     o.EducationalMaterialId.Equals(photo.EducationalMaterialId) &&
                                     o.UserId.Equals(photo.UserId) &&
                                     o.PartialMediaPath.Equals(photo.PartialMediaPath) &&
                                     o.MediaName.Equals(photo.MediaName) &&
                                     o.ContentType.Equals(photo.ContentType));
-                            lock (_repository)
-                                _repository.DeleteMedia(media);
+                            lock (universityData)
+                                universityData.Medias.Remove(media);
                         }
                         catch(Exception)
                         {
@@ -62,16 +63,26 @@ namespace Mephist.Controllers
                         }
                         finally
                         {
-                            lock (_repository)
-                                _repository.CreateMedia(photo);
+                            lock (universityData)
+                                universityData.Medias.AddAsync(photo).Wait();
                         }
                         
                     });
-                    lock (_repository)
-                        if (!_repository.ExistsEmployee(emp.FullName))
-                            _repository.CreateEmployee(emp);
+                    lock (universityData)
+                    {
+                        var employeeToUpdate = universityData.Employees.FirstOrDefaultAsync(o => o.FullName.Equals(emp.FullName)).Result;
+                        if (employeeToUpdate == null)
+                            universityData.Employees.AddAsync(emp).Wait();
                         else
-                            _repository.UpdateEmployee(emp.FullName, emp);
+                        {
+                            employeeToUpdate.Departments = emp.Departments;
+                            employeeToUpdate.Positions = emp.Positions;
+                            employeeToUpdate.Subjects = emp.Subjects;
+
+                            universityData.Employees.Update(employeeToUpdate);
+                        }
+                    }
+                        
                 });
 
             }
@@ -79,7 +90,7 @@ namespace Mephist.Controllers
             {
                 return Content(ex.Message + '\n' + ex.StackTrace);
             }
-            _repository.SaveChanges();
+            universityData.SaveAsync();
             return RedirectToAction("Index");
         }
 
