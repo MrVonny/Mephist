@@ -103,7 +103,9 @@ namespace Mephist.Algorithms
                 var departmentsNode = html.DocumentNode.SelectSingleNode(XPaths.DeparmentAndIstitute);
                 if (departmentsNode != null)
                 {
-                    employee.Departments = departmentsNode.InnerText.Split(@" / ").ToList();
+                    string str = departmentsNode.InnerText.ToString();
+                    var list = str.Split(" / ");
+                    employee.Departments = list.ToList();
                 }
 
                 //Фотография

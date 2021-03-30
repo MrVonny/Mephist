@@ -137,7 +137,7 @@
 
     $("#Work").change(function () {
         $("#Name").val("Лабораторная работа. " + $("#Work").val());
-    })
+    });
 
 
     function getAllSubjects() {

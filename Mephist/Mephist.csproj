@@ -32,10 +32,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Services\DAL\" />
     <Folder Include="wwwroot\assets\" />
     <Folder Include="wwwroot\bundles\" />
     <Folder Include="wwwroot\Content\" />
-    <Folder Include="wwwroot\vendor\" />
+    <Folder Include="wwwroot\js\vendor\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties package_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

@@ -1,25 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using System.Text;
 
 namespace Mephist.Models.Enums
 {
+    //ToDo:
+    //Разграничить лабараторный журнал и лабораторную работу
     public enum EducationalMaterialType
     {
-        [Display(Name ="Другое")]
+        [Description("Другое")]
         Other=-1,
-        [Display(Name = "Лекции")]
-        Lectures =1,
-        [Display(Name = "ДЗ")]
+        [Description("Лекции")]
+        Lectures = 1,
+        [Description("ДЗ")]
         Homework,
-        [Display(Name = "Шпоры")]
+        [Description("Шпоры")]
         CheatSheets,
-        [Display(Name = "Лабараторный журнал")]
+        [Description("Лабораторный журнал")]
         LaboratoryJournal,
-        [Display(Name = "Билеты")]
+        [Description("Билеты")]
         ExamTickets,
-        [Display(Name = "Курсовая работа")]
+        [Description("Курсовая работа")]
         TermPaper       
     }
+
+    
 }

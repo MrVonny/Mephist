@@ -1,78 +1,113 @@
 ﻿@model Mephist.Models.Employee
-
+@using System.Linq;
+@using System.Globalization; 
 @{
     ViewData["Title"] = "Details";
 }
 
-<div class="container row my-5">
-    <div class="col-12 col-md-4">
-        <img src="@Url.Content(Model.GetAvatarPath())" class="img-fluid" />
+<div class="container-fluid row my-5">
+    <div class="col-12 col-lg-4 d-flex justify-content-center my-2">
+        <div class="">
+            <img style="width: 300px" src="@Url.Content(Model.GetAvatarPath())" class="border border-2 border-secondary rounded" />
+        </div>
     </div>
-    <div class="col-12 col-md-8">
-        <h1>@Model.FullName</h1>
-        <table class="table table-borderless">
-            <tr>
-                <td>Преподаёт предметы:</td>
-                <td>
-                    @if (Model.Subjects != null) foreach (var subject in Model.Subjects)
-                        {
-                            <a href="#">@subject</a>
-                        }
-                </td>
-            </tr>
-            <tr>
-                <td>Преподаёт в институтах:</td>
-                <td>
-                </td>
-            </tr>
-        </table>
-        <h1>Учебные материалы</h1>
-        <table>
-            <thead>
-                <tr>
-                    <td>Название</td>
-                    <td>Тип</td>
-                    <td>Предмет</td>
-                    <td>Описание</td>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var em in Model.EducationalMaterials)
-                {
-                    <tr>
-                        <td>
-                            @em.Name
-                        </td>
-                        <td>@em.Type</td>
-                        <td>@em.Subject</td>
-                        <td>@em.Description</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+    <div class="col-12 col-lg-8">
+        <h2 class="text-center">@Model.FullName</h2>
+        <p class="fst-italic text-center text-black-50">
+            @string.Join(", ", Model.Positions)
+        </p>
+        <div class="container-fluid row">
+            <div class="d-flex flex-column col-12 col-lg-6">
+                <strong>Кафедры:</strong>
+                <ul>
+                    @foreach (var dep in Model.Departments)
+                    {
+                        <li>@dep</li>
+                    }
+                </ul>
+
+            </div>
+            <div class="d-flex flex-column col-12 col-lg-6">
+                <strong>Преподаваемые дисциплины:</strong>
+                <ul>
+                    @foreach (var subject in Model.Subjects)
+                    {
+                        <li>@subject</li>
+                    }
+                </ul>
+
+            </div>
+        </div>
+       
     </div>
     <div class="col-12">
-        <h1>Отзывы</h1>
-        @{
-            var reviewVM = new Mephist.ViewModels.ReviewViewModel() { EmployeeId = Model.Id };
-            await Html.RenderPartialAsync("_AddReview", reviewVM);
+        <div class="container-fluid row">
+           
+            <div class="col-12">
+                <h3>
+                    Учебные материалы
+                    <a asp-action="AddMaterial" asp-controller="EducationalMaterials">
+                        <span class="fs-5 text-center">Добавить</span>
+                    </a>
+                </h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>Название</td>
+                            <td>Предмет</td>
+                            <td>Тип</td>
+                            <td>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var em in Model.EducationalMaterials)
+                        {
+                            <tr>
+                                <td>@em.Name</td>
+                                <td>@em.Subject</td>
+                                <td>@em.GetTypeName()</td>
+                                <td>
+                                    <a asp-action="Download"
+                                       asp-controller="EducationalMaterials"
+                                       asp-route-id="@em.Id">
+                                        Скачать
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @if (Model.EducationalMaterials.Count == 0)
+                {
+                    <p>К сожаление, учебных материалов нет</p>
+                }
 
-        }
-        @foreach (var review in Model.Reviews.OrderByDescending(r => r.CreatedDate))
-        {
-            <div class="m-3">
-                <div class="col-12">
-                    <strong>@(review.Anonymously ? "Аноним" : review.User.UserName)</strong>
-                    <span>@review.CreatedDate.ToLongDateString() @review.CreatedDate.ToShortTimeString()</span>
-                </div>
-                <div class="col-12">
-                    <p>
-                        @review.Text
-                    </p>
-                </div>
             </div>
+        </div>
+        <div class="container-fluid d-flex flex-column">
+            <div class="col-12">
+                @{
+                    var reviewVM = new Mephist.ViewModels.ReviewViewModel() { EmployeeId = Model.Id };
+                    await Html.RenderPartialAsync("_AddReview", reviewVM);
 
-        }
+                }
+                @foreach (var review in Model.Reviews.OrderByDescending(r => r.CreatedDate))
+                {
+                    <div class="m-2 border-top border-1">
+                        <div>
+                            <strong class="fs-5">@(review.Anonymously ? "Аноним" : review.User.UserName)</strong>
+                            <time class="fs-5">@review.CreatedDate.ToString("f", CultureInfo.CurrentCulture)</time>
+                        </div>
+                        <div class="my-2">
+                            <p class="fs-6">@Html.Raw(@review.Text.Replace("\n","<br/>"))</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>
+
+
 
