@@ -25,7 +25,7 @@ namespace Mephist.Controllers
     public partial class EducationalMaterialsController : Controller
     {
 
-        private readonly UniversityData universityData;
+        private readonly UnitOfWork universityData;
         private readonly IWebHostEnvironment _webHost;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
@@ -33,7 +33,7 @@ namespace Mephist.Controllers
 
         readonly List<SelectListItem> Types;
 
-        public EducationalMaterialsController(UniversityData universityData, IWebHostEnvironment webHost, UserManager<User> userManager, SignInManager<User> signInManager, UniversityStaticData universityStaticData)
+        public EducationalMaterialsController(UnitOfWork universityData, IWebHostEnvironment webHost, UserManager<User> userManager, SignInManager<User> signInManager, UniversityStaticData universityStaticData)
         {
             this.universityData = universityData;
             _webHost = webHost;

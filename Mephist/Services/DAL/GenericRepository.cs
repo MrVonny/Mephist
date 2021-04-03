@@ -42,19 +42,23 @@ namespace Mephist.Services.DAL
             return await context.Set<TEntity>().FindAsync(id);
         }
 
-        public virtual void Remove(TEntity entity)
+        public virtual async Task Remove(TEntity entity)
         {
-            if (context.Entry(entity).State == EntityState.Detached)
-            {
-                context.Attach(entity);
-            }
-            context.Remove(entity);
+            context.Set<TEntity>().Remove(entity);
+            await context.SaveChangesAsync();
         }
 
-        public virtual void Update(TEntity entity)
+        public virtual async Task RemoveRange(IEnumerable<TEntity> entitys)
+        {
+            context.Set<TEntity>().RemoveRange(entitys);
+            await context.SaveChangesAsync();
+        }
+
+        public virtual async Task Update(TEntity entity)
         {
             context.Attach(entity);
             context.Entry(entity).State = EntityState.Modified;
+            await context.SaveChangesAsync();
         }
     }
 }

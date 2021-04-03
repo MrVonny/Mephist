@@ -18,12 +18,12 @@ namespace Mephist.Controllers
     public class AccountController : Controller
     {
         //private IUniversityRepository _repository;
-        private UniversityData universityData;
+        private UnitOfWork universityData;
         private IWebHostEnvironment _webHost;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public AccountController(UniversityData universityData, IWebHostEnvironment webHost, UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UnitOfWork universityData, IWebHostEnvironment webHost, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             this.universityData = universityData;
             _webHost = webHost;

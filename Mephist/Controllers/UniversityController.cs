@@ -14,11 +14,11 @@ namespace Mephist.Controllers
     [ApiController]
     public class UniversityController : ControllerBase
     {
-        private readonly UniversityData universityData;
+        private readonly UnitOfWork universityData;
         private readonly IHostEnvironment _environment;
         private readonly UniversityStaticData _universityStaticData;
 
-        public UniversityController(UniversityData universityData, IHostEnvironment environment, UniversityStaticData universityStaticData)
+        public UniversityController(UnitOfWork universityData, IHostEnvironment environment, UniversityStaticData universityStaticData)
         {
             this.universityData = universityData;
             _environment = environment;
@@ -68,19 +68,14 @@ namespace Mephist.Controllers
         {
             if (subject is null)
                 return BadRequest();
-            try
-            {
-                return Ok(_universityStaticData.GetLaboratoryWorks(subject));
-            }
-            catch(InvalidCastException)
-            {
-                return BadRequest("Нет такого предмета");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error retrieving data from the database");
-            }
+
+            var res = _universityStaticData.GetLaboratoryWorks(subject);
+
+            if (res is null)
+                return BadRequest();
+
+            return Ok(res);
+
 
         }
 

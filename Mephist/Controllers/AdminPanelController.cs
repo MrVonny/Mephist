@@ -16,11 +16,11 @@ namespace Mephist.Controllers
     [Authorize(Roles = "admin")]
     public class AdminPanelController : Controller
     {
-        private readonly UniversityData universityData;
+        private readonly UnitOfWork universityData;
         private readonly IWebHostEnvironment _webHost;
 
-        public AdminPanelController(UniversityData universityData, IWebHostEnvironment webHost)
-        {          
+        public AdminPanelController(UnitOfWork universityData, IWebHostEnvironment webHost)
+        {
             this.universityData = universityData;
             _webHost = webHost;
         }
@@ -37,53 +37,24 @@ namespace Mephist.Controllers
             {
                 EmployeeParser parser = new EmployeeParser(_webHost);
                 var employees = parser.GetEmployees();
-                Parallel.ForEach(employees,  (emp) =>
+                foreach (var emp in employees)
                 {
-                    Parallel.ForEach(emp.Photos,  (photo) =>
-                    {
-                        IEnumerable<Media> medias;
-                        lock (universityData)
-                            medias = universityData.Medias.GetAsync().Result;
-                        Media media = null;
-                        try
-                        {
-                            media = medias.SingleOrDefault(o =>
-                                    o.EmployeeId.Equals(photo.EmployeeId) &&
-                                    o.EducationalMaterialId.Equals(photo.EducationalMaterialId) &&
-                                    o.UserId.Equals(photo.UserId) &&
-                                    o.PartialMediaPath.Equals(photo.PartialMediaPath) &&
-                                    o.MediaName.Equals(photo.MediaName) &&
-                                    o.ContentType.Equals(photo.ContentType));
-                            lock (universityData)
-                                universityData.Medias.Remove(media);
-                        }
-                        catch(Exception)
-                        {
 
-                        }
-                        finally
-                        {
-                            lock (universityData)
-                                universityData.Medias.AddAsync(photo).Wait();
-                        }
+                    var employeeToUpdate = await universityData.Employees.FirstOrDefaultAsync(o => o.FullName.Equals(emp.FullName));
+                    if (employeeToUpdate == null)
+                        await universityData.Employees.AddAsync(emp);
+                    else
+                    {
+                        employeeToUpdate.Departments = emp.Departments;
+                        employeeToUpdate.Positions = emp.Positions;
+                        employeeToUpdate.Subjects = emp.Subjects;
+                        await universityData.Medias.RemoveRange(employeeToUpdate.Photos);                       
+                        employeeToUpdate.Photos = emp.Photos;
                         
-                    });
-                    lock (universityData)
-                    {
-                        var employeeToUpdate = universityData.Employees.FirstOrDefaultAsync(o => o.FullName.Equals(emp.FullName)).Result;
-                        if (employeeToUpdate == null)
-                            universityData.Employees.AddAsync(emp).Wait();
-                        else
-                        {
-                            employeeToUpdate.Departments = emp.Departments;
-                            employeeToUpdate.Positions = emp.Positions;
-                            employeeToUpdate.Subjects = emp.Subjects;
 
-                            universityData.Employees.Update(employeeToUpdate);
-                        }
+                        await universityData.Employees.Update(employeeToUpdate);
                     }
-                        
-                });
+                }
 
             }
             catch (Exception ex)

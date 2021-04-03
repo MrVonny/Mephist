@@ -8,31 +8,13 @@ using System.Threading.Tasks;
 
 namespace Mephist.Services.DAL
 {
-    public class UniversityData : IDisposable
+    public class UnitOfWork : IDisposable
     {
         //UserManager<User> _userManager;
         //RoleManager<IdentityRole> _roleManager;
-        public UniversityData(UniversityContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public UnitOfWork(UniversityContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             this.context = context;
-            /*
-            string adminEmail = "borafon@gmail.com";
-            string password = "MrBen228";
-            if (roleManager.FindByNameAsync("admin").Result == null)
-            {
-                roleManager.CreateAsync(new IdentityRole("admin"));
-            }
-            if (userManager.FindByEmailAsync(adminEmail).Result == null)
-            {
-                User admin = new User { Email = adminEmail, UserName = "Admin" };
-
-                IdentityResult result = userManager.CreateAsync(admin, password).Result;
-                if (result.Succeeded)
-                {
-                    userManager.AddToRoleAsync(admin, "admin");
-                }
-            }\
-            */
         }
 
         private readonly UniversityContext context;

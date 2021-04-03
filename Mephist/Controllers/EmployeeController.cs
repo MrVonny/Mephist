@@ -21,12 +21,12 @@ namespace Mephist.Controllers
     public class EmployeeController : Controller
     {
 
-        private readonly UniversityData universityData;
+        private readonly UnitOfWork universityData;
         private readonly IHostEnvironment _environment;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public EmployeeController(UniversityData universityData, IHostEnvironment environment, UserManager<User> userManager, SignInManager<User> signInManager)
+        public EmployeeController(UnitOfWork universityData, IHostEnvironment environment, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             this.universityData = universityData;
             _environment = environment;

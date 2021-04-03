@@ -95,7 +95,7 @@ namespace Mephist.Services
         public IEnumerable<string> GetLaboratoryWorks(string subject)
         {
             if (!laboratoryWorks.ContainsKey(subject))
-                throw new InvalidCastException();
+                return null;
             return laboratoryWorks[subject];
         }
         public int GetSemestrBySubject(string subject)

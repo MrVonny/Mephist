@@ -40,7 +40,7 @@ namespace Mephist
             }).AddEntityFrameworkStores<UniversityContext>()
               .AddDefaultTokenProviders();
 
-            services.AddTransient<UniversityData>();
+            services.AddTransient<UnitOfWork>();
             //services.AddTransient<IUniversityRepository, UniversityRepository>();
             services.AddDbContext<UniversityContext>(options =>
                     options.UseLazyLoadingProxies().UseSqlite(Configuration.GetConnectionString("SQLite")));
