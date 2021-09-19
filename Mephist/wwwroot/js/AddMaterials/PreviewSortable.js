@@ -24,7 +24,7 @@
         });
 
         console.log(list);
-        $("#query").val(list.toString());
+        $("#query").val(list.join('/'));
     }
 });
 

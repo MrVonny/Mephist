@@ -16,46 +16,47 @@ using Microsoft.Extensions.FileProviders;
 using System.IO;
 using AspNet.Security.OAuth.Vkontakte;
 using Mephist.Services.DAL;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Mephist
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment{ get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdentity<User, IdentityRole>(options =>
-            {
-                options.SignIn.RequireConfirmedAccount = true;
-                options.SignIn.RequireConfirmedEmail = true;
-                options.User.RequireUniqueEmail = true;
-                options.Password.RequireNonAlphanumeric = false;
-            }).AddEntityFrameworkStores<UniversityContext>()
-              .AddDefaultTokenProviders();
+                {
+                    options.SignIn.RequireConfirmedAccount = true;
+                    options.SignIn.RequireConfirmedEmail = true;
+                    options.User.RequireUniqueEmail = true;
+                    options.Password.RequireNonAlphanumeric = false;
+                }).AddEntityFrameworkStores<UniversityContext>()
+                .AddDefaultTokenProviders();
 
             services.AddTransient<UnitOfWork>();
             //services.AddTransient<IUniversityRepository, UniversityRepository>();
-            services.AddDbContext<UniversityContext>(options =>
-                    options.UseLazyLoadingProxies().UseSqlite(Configuration.GetConnectionString("SQLite")));
+            if (Environment.IsDevelopment())
+                services.AddDbContext<UniversityContext>(options =>
+                    options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("VPS")));
+            else
+                services.AddDbContext<UniversityContext>(options =>
+                    options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("MephistDB")));
 
-            services.Configure<IdentityOptions>(option =>
-            {
 
 
+            services.Configure<IdentityOptions>(option => { });
 
-            });
-
-            services.ConfigureApplicationCookie(options =>
-            {
-
-            });
+            services.ConfigureApplicationCookie(options => { });
 
             services.AddAuthentication()
                 .AddVkontakte(options =>
@@ -68,22 +69,31 @@ namespace Mephist
             services.AddRazorPages();
 
             services.AddScoped<UniversityStaticData>();
+            services.AddScoped<EmailSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
+            app.UseDeveloperExceptionPage();
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                //app.UseHsts();
+                /*
+                app.UseHsts();
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                });
+                */
             }
+
             //app.UseHttpsRedirection();
+            
 
             app.UseDefaultFiles();
             app.UseStaticFiles();

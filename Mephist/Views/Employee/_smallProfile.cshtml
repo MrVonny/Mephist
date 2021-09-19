@@ -23,7 +23,7 @@
                 }
 
                 <div class="d-flex justify-content-center">
-                    <img class="img-thumbnail" src="@Url.Content(Model.GetAvatarPath())" style="height: 210px; " />
+                    <img class="img-thumbnail" src="@Url.Content(Model.GetAvatarUrl())" style="height: 210px; " />
                 </div>
 
             </div>
@@ -38,10 +38,14 @@
     </div>
     <div class="col-md-4 col-xl-2">
         <p><strong class="text-center">Дисциплины</strong></p>
-        @if (Model.Subjects != null) foreach (var subjects in Model.Subjects)
+        @if (Model.Subjects != null)
+        {
+            foreach (var subjects in Model.Subjects)
             {
                 <span>@subjects</span><br />
             }
+        }
+
     </div>
     <div class="col-md-4 col-xl-4">
         <p><strong class="text-center">Учебные материалы</strong></p>

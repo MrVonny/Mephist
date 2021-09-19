@@ -98,7 +98,7 @@ namespace Mephist.Controllers
                     review.User = await _userManager.GetUserAsync(User);
 
                 await universityData.Reviews.AddAsync(review);
-                universityData.SaveAsync();
+                await universityData.SaveAsync();
             }
             return RedirectToAction("Details", new { id = model.EmployeeId });
         }
@@ -112,8 +112,8 @@ namespace Mephist.Controllers
         {
             if (id != null)
             {
-                universityData.Employees.Remove(await universityData.Employees.GetByIdAsync(id.Value));
-                universityData.SaveAsync();
+                await universityData.Employees.Remove(await universityData.Employees.GetByIdAsync(id.Value));
+                await universityData.SaveAsync();
             }
                 
         }
@@ -126,9 +126,9 @@ namespace Mephist.Controllers
         {
             if (id is null)
                 return StatusCode(400);
-            universityData.Reviews.Remove(await universityData.Reviews.GetByIdAsync(id.Value));
-            universityData.SaveAsync();
-            return RedirectToAction("GetMaterials");
+            await universityData.Reviews.Remove(await universityData.Reviews.GetByIdAsync(id.Value));
+            await universityData.SaveAsync();
+            return RedirectToAction("GetMaterials", "EducationalMaterials");
         }
 
 

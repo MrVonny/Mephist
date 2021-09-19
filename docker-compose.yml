@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  mephist:
+    image: ${DOCKER_REGISTRY-}mephist
+    build:
+      context: .
+      dockerfile: Mephist/Dockerfile
+    depends_on: 
+        - sql
+    ports:
+        - "228:80"
+
+  sql:
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=MrBen228
+    ports:
+        - "1401:1433"

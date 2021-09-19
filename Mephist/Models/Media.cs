@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Mephist.Services;
 
 namespace Mephist.Models
 {
@@ -22,12 +23,12 @@ namespace Mephist.Models
         public virtual Employee Employee { get; set; }
         [Required]
         public string MediaName { get; set; }
-        [Required]
-        public string PartialMediaPath { get; set; }
         public string UserId { get; set; }
         public virtual User User { get; set; }
         [Required]
         public DateTime CreatedDate { get; set; }
+        [Required]
+        public string Key { get; set; }
 
         public static readonly string DefaultAvatarPath = @"Content/Shared/DefaultAvatar.jpg";
         
@@ -36,31 +37,31 @@ namespace Mephist.Models
         {
         }
 
-        public Media(EducationalMaterial educationalMaterial, string mediaName,string contentType, string partialMediaPath, User user)
+        public Media(EducationalMaterial educationalMaterial, string mediaName, string key, string contentType, User user)
         {
             EducationalMaterial = educationalMaterial;
             ContentType = contentType;
             MediaName = mediaName;
-            PartialMediaPath = partialMediaPath;
             User = user;
             CreatedDate = DateTime.Now;
+            Key = key;
         }
 
-        public Media(Employee employee, string mediaName, string contentType, string partialMediaPath, User user)
+        public Media(Employee employee, string mediaName, string key, string contentType, User user)
         {
             Employee = employee;
             ContentType = contentType;
             MediaName = mediaName;
-            PartialMediaPath = partialMediaPath;
             User = user;
             CreatedDate = DateTime.Now;
+            Key = key;
         }
 
-
-        public string GetPath()
+        public string GetSignerUrl()
         {
-            return PartialMediaPath + "/" + MediaName;
+            var storage = new AwsS3Storage();
+            return storage.GetPreSignedUrl(this);
+            
         }
-
     }
 }

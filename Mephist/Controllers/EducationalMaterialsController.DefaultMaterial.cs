@@ -91,31 +91,21 @@ namespace Mephist.Controllers
                     Materials = medias
                 };
                 await universityData.EducationalMaterials.AddAsync(em);
-
-
-                string patrialPath = "Content/EducationalMaterials/" + String.Format("{0}_{1}",
-                    DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss"), model.Name.Transliterate());
-                string path = Path.Combine(_webHost.WebRootPath, patrialPath);
-                Directory.CreateDirectory(path);
+                var storage = new AwsS3Storage();
                 foreach (var file in uploads)
                 {
-
-                    using (var fileSteam = new FileStream(Path.Combine(path, file.FileName), FileMode.Create))
-                    {
-                        await file.CopyToAsync(fileSteam);
-
-                    }
-
+                    var key =
+                        DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + "_" + file.FileName.Transliterate();
                     medias.Add(new Media(em,
-                    file.FileName, file.ContentType, patrialPath, await _userManager.GetUserAsync(User)));
-
+                        key, key, file.ContentType, await _userManager.GetUserAsync(User)));
+                    await storage.AddItem(file.OpenReadStream(), key, file.ContentType);
                 }
 
                 foreach (var media in medias)
                     media.EducationalMaterial = em;
                 foreach (var media in medias)
                     await universityData.Medias.AddAsync(media);
-                universityData.SaveAsync();
+                await universityData.SaveAsync();
 
                 return RedirectToAction("GetMaterials", "EducationalMaterials");
             }

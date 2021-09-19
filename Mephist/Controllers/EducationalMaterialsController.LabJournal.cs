@@ -73,30 +73,24 @@ namespace Mephist.Controllers
                     Year = model.Year
                 };
                 await universityData.LaboratoryJournals.AddAsync(lj);
-
-                string patrialPath = "Content/EducationalMaterials/" + String.Format("{0}_{1}",
-                    DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss"), model.Name.Transliterate());
-                string path = Path.Combine(_webHost.WebRootPath, patrialPath);
-                Directory.CreateDirectory(path);
-                var fileNames = query.Split(',');
+                var storage = new AwsS3Storage();
+                var fileNames = query.Split('/');
                 for (int i = 0; i < fileNames.Length; i++)
                 {
                     var uploadfileName = fileNames[i];
                     var file = uploads.Single(x=>x.FileName==uploadfileName);
-                    string fileName= (i + 1).ToString()+"."+file.FileName.Split('.').Last();
-                    using (var fileSteam = new FileStream(Path.Combine(path, fileName), FileMode.Create))
-                    {
-                        await file.CopyToAsync(fileSteam);
-                    }
+
+                    var key = (i + 1) + "_" + $"{DateTime.Now:O}." + file.FileName.Split('.').Last();
                     medias.Add(new Media(lj,
-                    fileName, file.ContentType, patrialPath, await _userManager.GetUserAsync(User)));
+                        key, key, file.ContentType, await _userManager.GetUserAsync(User)));
+                    await storage.AddItem(file.OpenReadStream(), key, file.ContentType);
                 }
 
                 foreach (var media in medias)
                     media.EducationalMaterial = lj;
                 foreach (var media in medias)
                    await universityData.Medias.AddAsync(media);
-                universityData.SaveAsync();
+                await universityData.SaveAsync();
 
                 return RedirectToAction("GetMaterials", "EducationalMaterials");
             }

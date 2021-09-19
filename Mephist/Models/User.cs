@@ -15,10 +15,6 @@ namespace Mephist
         public virtual List<Media> Photos { get; set; } = new List<Media>();
         public virtual List<Review> Reviews { get; set; } = new List<Review>();
 
-        public string GetAvatarPath()
-        {
-            return "~/" + (Photos.Count == 0 ? Media.DefaultAvatarPath : Photos.First().GetPath());
-        }
 
     }
 }

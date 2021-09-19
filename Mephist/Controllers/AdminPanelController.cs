@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Mephist.Controllers
 {
-    [Authorize(Roles = "admin")]
+    //[Authorize(Roles = "admin")]
     public class AdminPanelController : Controller
     {
         private readonly UnitOfWork universityData;
@@ -35,8 +35,9 @@ namespace Mephist.Controllers
         {
             try
             {
+                var storage = new AwsS3Storage();
                 EmployeeParser parser = new EmployeeParser(_webHost);
-                var employees = parser.GetEmployees();
+                var employees = await parser.GetEmployees();
                 foreach (var emp in employees)
                 {
 
@@ -45,6 +46,7 @@ namespace Mephist.Controllers
                         await universityData.Employees.AddAsync(emp);
                     else
                     {
+                        await storage.DeleteItem(emp.Photos.First().Key);
                         employeeToUpdate.Departments = emp.Departments;
                         employeeToUpdate.Positions = emp.Positions;
                         employeeToUpdate.Subjects = emp.Subjects;
@@ -61,7 +63,7 @@ namespace Mephist.Controllers
             {
                 return Content(ex.Message + '\n' + ex.StackTrace);
             }
-            universityData.SaveAsync();
+            await universityData.SaveAsync();
             return RedirectToAction("Index");
         }
 

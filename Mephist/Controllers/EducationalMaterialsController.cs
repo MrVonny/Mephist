@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -52,43 +53,37 @@ namespace Mephist.Controllers
             };
         }
 
+        
         public async Task<IActionResult> Download(int id)
         {
             EducationalMaterial em = await universityData.EducationalMaterials.GetByIdAsync(id);
             List<Media> materials = em.Materials;
-            List<byte[]> files = new List<byte[]>();
             byte[] compressed;
+            AwsS3Storage storage = new AwsS3Storage();
+            var files = new ConcurrentBag<Stream>();
+            await Task.WhenAll(
+                materials.Select(async m =>files.Add(await storage.GetItem(m.Key)))
+                );
 
-            foreach (var material in materials)
+            await using MemoryStream memoryStream = new MemoryStream();
+            using var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true);
+
+            int i = 0;
+            foreach (var file in files)
             {
-                string path = _webHost.WebRootPath;
-                files.Add(System.IO.File.ReadAllBytes(Path.Combine(path, material.GetPath())));
-
+                var fileInArchive = archive.CreateEntry(materials[i++].MediaName, CompressionLevel.Optimal);
+                await using var entryStream = fileInArchive.Open();
+                await file.CopyToAsync(entryStream);
             }
 
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                using var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true);
-                for (int i = 0; i < materials.Count; i++)
-                {
-                    var fileInArchive = archive.CreateEntry(materials[i].MediaName, CompressionLevel.Optimal);
+            archive.Dispose();
+            compressed = memoryStream.ToArray();
 
-                    using var entryStream = fileInArchive.Open();
-                    using var fileToCompressStream = new MemoryStream(files[i]);
-                    fileToCompressStream.CopyTo(entryStream);
-
-                }
-                archive.Dispose();
-
-                compressed = memoryStream.ToArray();
-
-
-            }
-            //GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(2, GCCollectionMode.Forced, false, true);
             
             return File(compressed, "application/zip", em.Name + ".zip");
         }
+        
 
         [HttpGet]
         [Authorize]
@@ -117,8 +112,8 @@ namespace Mephist.Controllers
         {
             if (id is null)
                 return StatusCode(400);
-            universityData.EducationalMaterials.Remove(await universityData.EducationalMaterials.GetByIdAsync(id.Value));
-            universityData.SaveAsync();
+            await universityData.EducationalMaterials.Remove(await universityData.EducationalMaterials.GetByIdAsync(id.Value));
+            await universityData.SaveAsync();
             return RedirectToAction("GetMaterials");
         }
 

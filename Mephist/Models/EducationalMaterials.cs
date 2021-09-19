@@ -17,8 +17,6 @@ namespace Mephist
         public int? EmployeeId { get; set; }
         public virtual Employee Employee { get; set; }
         [Required]
-        [Column(TypeName = "nvarchar(50)")]
-        [StringLength(50)]
         public string Name { get; set; }
         [Column(TypeName = "nvarchar(4000)")]
         [StringLength(4000)]

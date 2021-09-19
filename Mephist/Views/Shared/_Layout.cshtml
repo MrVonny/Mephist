@@ -38,7 +38,7 @@
                         @if (signInManager.IsSignedIn(User))
                         {
                     <li class="nav-item">
-                        <a asp-controller="Account" asp-action="Profile" class="nav-link">@userManager.GetUserAsync(User).Result.UserName</a>
+                        <a asp-controller="Account" asp-action="Profile" class="nav-link">@userManager.GetUserAsync(User).Result?.UserName</a>
                     </li>
                             <li class="nav-item">
                                     <a asp-controller="Account" asp-action="Logout" class="btn btn-primary p-2 nav-link"><span class="text-white">Выйти</span></a>

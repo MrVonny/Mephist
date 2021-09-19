@@ -19,16 +19,18 @@ namespace Mephist.Controllers
     {
         //private IUniversityRepository _repository;
         private UnitOfWork universityData;
-        private IWebHostEnvironment _webHost;
+        private readonly IWebHostEnvironment _webHost;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly EmailSender _emailSender;
 
-        public AccountController(UnitOfWork universityData, IWebHostEnvironment webHost, UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UnitOfWork universityData, IWebHostEnvironment webHost, UserManager<User> userManager, SignInManager<User> signInManager, EmailSender emailSender)
         {
             this.universityData = universityData;
             _webHost = webHost;
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -118,10 +120,7 @@ namespace Mephist.Controllers
                 "Account",
                 new { userId = user.Id, code = code },
                 protocol: HttpContext.Request.Scheme);
-            EmailService emailService = new EmailService();
-            await emailService.SendEmailAsync(user.Email, "Подтвердите свой аккаунт",
-                $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
-
+            await _emailSender.SendConfirmEmail(user.Email, callbackUrl);
             ViewBag.Email = user.Email;
             return View();
         }
@@ -176,7 +175,7 @@ namespace Mephist.Controllers
                     {
                         user.PasswordHash = _passwordHasher.HashPassword(user, newPassword);
                         await _userManager.UpdateAsync(user);
-                        return RedirectToAction("Index");
+                        return RedirectToAction("Profile");
                     }
                     else
                     {

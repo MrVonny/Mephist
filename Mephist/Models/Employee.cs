@@ -27,9 +27,9 @@ namespace Mephist.Models
         public virtual List<Review> Reviews { get; set; } = new List<Review>();
         public virtual List<Media> Photos { get; set; } = new List<Media>();
 
-        public string GetAvatarPath()
+        public string GetAvatarUrl()
         {
-            return "~/" + (Photos.Count == 0 ? Media.DefaultAvatarPath : Photos.First().GetPath());
+            return (Photos.Count == 0 ? ("~/" + Media.DefaultAvatarPath) : Photos.First().GetSignerUrl());
         }
 
         #region Constructors

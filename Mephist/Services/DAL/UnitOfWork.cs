@@ -15,6 +15,28 @@ namespace Mephist.Services.DAL
         public UnitOfWork(UniversityContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             this.context = context;
+            /*
+            lock (context)
+            {
+                string adminEmail = "borafon@gmail.com";
+                string password = "MrBen228";
+                if (roleManager.FindByNameAsync("Admin").Result == null)
+                {
+                    roleManager.CreateAsync(new IdentityRole("admin"));
+                }
+                if (userManager.FindByEmailAsync(adminEmail).Result == null)
+                {
+                    User admin = new User { Email = adminEmail, UserName = "Admin", EmailConfirmed = true };
+
+                    IdentityResult result = userManager.CreateAsync(admin, password).Result;
+                    if (result.Succeeded)
+                    {
+                        userManager.AddToRoleAsync(admin, "admin");
+                    }
+                }
+            }
+            
+            */
         }
 
         private readonly UniversityContext context;
@@ -105,7 +127,7 @@ namespace Mephist.Services.DAL
             }
         }
 
-        public async void SaveAsync()
+        public async Task SaveAsync()
         {
             await context.SaveChangesAsync();
         }

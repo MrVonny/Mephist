@@ -5,10 +5,12 @@
     <UserSecretsId>d72c8e66-19ff-49c2-8379-00e68c0421a5</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	<LangVersion>8.0</LangVersion>
+	<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AspNet.Security.OAuth.Vkontakte" Version="5.0.1" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.3.1" />
     <PackageReference Include="DuoVia.FuzzyStrings" Version="2.1.0" />
     <PackageReference Include="FuzzySharp" Version="2.0.2" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.30" />
@@ -34,10 +36,9 @@
   <ItemGroup>
     <Folder Include="wwwroot\assets\" />
     <Folder Include="wwwroot\bundles\" />
-    <Folder Include="wwwroot\Content\" />
     <Folder Include="wwwroot\js\vendor\" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties package_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" package_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>
